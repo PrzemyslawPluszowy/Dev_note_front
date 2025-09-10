@@ -1,0 +1,43 @@
+name: devnotedekstop
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+melos: ^7.1.0
+
+workspace:
+  - apps/dev_note
+  - packages/data_source/auth_data_source
+  - packages/data_source/user_data_source
+  - packages/data_source/shared_models
+
+scripts:
+  analyze:
+    description: Run analysis for all packages
+    run: dart analyze .
+    packageFilters:
+      dirExists: lib
+
+      test:
+        description: Run tests for all packages
+        run: dart test
+        packageFilters:
+          dirExists: test
+
+          format:
+            description: Format all packages
+            run: dart format --set-exit-if-changed .
+
+            clean:
+              description: Clean all packages
+              run: flutter clean
+              packageFilters:
+                flutter: true
+
+                build:
+                  description: Run build_runner for all packages
+                  run: dart run build_runner build --delete-conflicting-outputs
+                  packageFilters:
+                    dependsOn: build_runner
+
+                    sync-deps:
+                      description: Synchronize dependencies across all packages
+                      run: melos bootstrap

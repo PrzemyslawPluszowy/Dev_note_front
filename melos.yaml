@@ -1,0 +1,60 @@
+name: devnotedekstop
+
+packages:
+  - apps/dev_note
+  - packages/data_source/auth_data_source
+  - packages/data_source/user_data_source
+  - packages/data_source/shared_models
+
+command:
+  bootstrap:
+    runPubGetInParallel: false
+    dependencies:
+      # Wspólne wersje zależności dla wszystkich pakietów
+      dio: ^5.9.0
+      retrofit: ^4.7.2
+      freezed_annotation: ^3.1.0
+      json_annotation: ^4.9.0
+      hive_ce: ^2.11.4
+      hive_ce_flutter: ^2.3.2
+    dev_dependencies:
+      # Wspólne dev dependencies
+      build_runner: ^2.7.1
+      freezed: ^3.2.0
+      json_serializable: ^6.11.1
+      retrofit_generator: ^10.0.5
+      hive_ce_generator: ^1.9.3
+      flutter_lints: ^6.0.0
+
+scripts:
+  analyze:
+    description: Run analysis for all packages
+    run: dart analyze .
+    packageFilters:
+      dirExists: lib
+
+  test:
+    description: Run tests for all packages
+    run: dart test
+    packageFilters:
+      dirExists: test
+
+  format:
+    description: Format all packages
+    run: dart format --set-exit-if-changed .
+
+  clean:
+    description: Clean all packages
+    run: flutter clean
+    packageFilters:
+      flutter: true
+
+  build:
+    description: Run build_runner for all packages
+    run: dart run build_runner build --delete-conflicting-outputs
+    packageFilters:
+      dependsOn: build_runner
+
+  sync-deps:
+    description: Synchronize dependencies across all packages
+    run: melos bootstrap
