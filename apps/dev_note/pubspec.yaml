@@ -1,0 +1,108 @@
+# Komendy do generowania plików:
+# 1. Generowanie plików lokalizacji (easy_localization):
+#    - Klucze lokalizacji: dart run easy_localization:generate -S assets/translations -f keys -o $(pwd)/lib/core/gen/locale_keys.g.dart
+#    - Loader lokalizacji: dart run easy_localization:generate -S assets/translations -f json -o $(pwd)/lib/core/gen/codegen_loader.g.dart
+#    - Oba pliki: dart run easy_localization:generate -S assets/translations -f keys -o $(pwd)/lib/core/gen/locale_keys.g.dart && dart run easy_localization:generate -S assets/translations -f json -o $(pwd)/lib/core/gen/codegen_loader.g.dart
+# 2. Generowanie wszystkich plików (freezed, json_serializable, retrofit, auto_route, flutter_gen):
+#    dart run build_runner build
+# 3. Generowanie z czyszczeniem cache:
+#    dart run build_runner build --delete-conflicting-outputs
+## Melos run - odpala skrypty z pubspec.yaml wszystkich pakietów
+
+name: dev_note
+description: "A new Flutter project."
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  auto_route: ^10.1.2
+
+  cupertino_icons: ^1.0.8
+  dio: ^5.9.0
+  easy_localization: ^3.0.8
+  easy_localization_loader: ^2.0.2
+
+  envied: ^1.2.1
+  flex_color_scheme: ^8.3.0
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_hooks: ^0.21.3+1
+  freezed_annotation: ^3.1.0
+  get_it: ^8.2.0
+  google_fonts: ^6.3.1
+  hive_ce: ^2.11.4
+  hive_ce_flutter: ^2.3.2
+  image_picker: ^1.2.0
+  json_annotation: ^4.9.0
+  p_repositories: ^0.0.1
+  path_provider: ^2.1.5
+
+  phosphor_flutter: ^2.1.0
+  reactive_forms: ^18.1.1
+  retrofit: ^4.7.2
+  rxdart: ^0.28.0
+  talker_dio_logger: ^5.0.0
+  talker_logger: ^5.0.0
+
+dev_dependencies:
+  auto_route_generator: ^10.2.4
+
+  build_runner: ^2.7.1
+  envied_generator: ^1.2.1
+  flutter_gen_runner: ^5.11.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.2.0
+  hive_ce_generator: ^1.9.3
+
+  # Code generation
+  json_serializable: ^6.11.1
+  retrofit_generator: ^10.0.5
+
+  # Linting and code quality
+  very_good_analysis: ^9.0.0
+
+# Skrypty do generowania
+scripts:
+  generate_locales:
+    dart run easy_localization:generate -S assets/translations -f
+    keys -o lib/generated/locale_keys.g.dart
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/translations/
+
+# Konfiguracja flutter_gen
+flutter_gen:
+  output: lib/core/gen/
+  # To add custom fonts to your application, add a fonts section here,to m
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
+
+resolution: workspace

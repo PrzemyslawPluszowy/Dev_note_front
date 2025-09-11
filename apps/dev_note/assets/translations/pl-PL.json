@@ -1,0 +1,48 @@
+{
+    "auth": {
+        "email": "Email",
+        "password": "Hasło",
+        "name": "Imię",
+        "confirmPassword": "Potwierdź hasło",
+        "login": "Zaloguj się",
+        "register": "Zarejestruj się",
+        "alreadyHaveAccount": "Masz już konto? Zaloguj się",
+        "pickImage": "Wybierz zdjęcie",
+        "profilePicture": "Zdjęcie profilowe",
+        "forgotPassword": "Zapomniałeś hasła?",
+        "resetCode": "Kod resetowania",
+        "newPassword": "Nowe hasło",
+        "resetPassword": "Resetuj hasło",
+        "backToLogin": "Powrót do logowania",
+        "needResetCode": "Potrzebujesz kodu resetowania?",
+        "requestResetCode": "Wyślij kod resetowania",
+        "backToResetPassword": "Powrót do resetowania hasła",
+        "lostActivationLink": "Nie otrzymałeś linku aktywacyjnego?",
+        "requestActivationLink": "Wyślij link aktywacyjny"
+    },
+    "validation": {
+        "emailRequired": "Email jest wymagany",
+        "emailInvalid": "Podaj prawidłowy adres email",
+        "passwordRequired": "Hasło jest wymagane",
+        "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+        "passwordPattern": "Hasło musi zawierać co najmniej jedną małą literę, jedną wielką literę, jedną cyfrę i jeden znak specjalny (@$!%*?&#)",
+        "nameRequired": "Imię jest wymagane",
+        "confirmPasswordRequired": "Potwierdzenie hasła jest wymagane",
+        "passwordsMustMatch": "Hasła muszą być identyczne",
+        "resetCodeRequired": "Kod resetowania jest wymagany",
+        "resetCodeInvalid": "Kod musi być liczbą"
+    },
+    "errors": {
+        "imagePickError": "Błąd podczas wybierania obrazu"
+    },
+    "common": {
+        "loading": "Ładowanie...",
+        "error": "Błąd",
+        "success": "Sukces",
+        "cancel": "Anuluj",
+        "save": "Zapisz",
+        "delete": "Usuń",
+        "edit": "Edytuj",
+        "back": "Powrót"
+    }
+}

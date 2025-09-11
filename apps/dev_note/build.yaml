@@ -1,0 +1,6 @@
+targets:
+  $default:
+    sources:
+      # Wyklucz pliki easy_localization z przetwarzania przez inne generatory
+      exclude:
+        - "lib/core/gen/codegen_loader.g.dart"

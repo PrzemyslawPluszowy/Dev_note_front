@@ -1,0 +1,48 @@
+{
+    "auth": {
+        "email": "Email",
+        "password": "Password",
+        "name": "Name",
+        "confirmPassword": "Confirm Password",
+        "login": "Login",
+        "register": "Register",
+        "alreadyHaveAccount": "Already have an account? Login",
+        "pickImage": "Pick Image",
+        "profilePicture": "Profile Picture",
+        "forgotPassword": "Forgot Password?",
+        "resetCode": "Reset Code",
+        "newPassword": "New Password",
+        "resetPassword": "Reset Password",
+        "backToLogin": "Back to login",
+        "needResetCode": "Need a reset code?",
+        "requestResetCode": "Request Reset Code",
+        "backToResetPassword": "Back to reset password",
+        "lostActivationLink": "Lost activation link?",
+        "requestActivationLink": "Request activation link"
+    },
+    "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 8 characters",
+        "passwordPattern": "Password must contain at least one lowercase letter, one uppercase letter, one digit and one special character (@$!%*?&#)",
+        "nameRequired": "Name is required",
+        "confirmPasswordRequired": "Password confirmation is required",
+        "passwordsMustMatch": "Passwords must match",
+        "resetCodeRequired": "Reset code is required",
+        "resetCodeInvalid": "Code must be a number"
+    },
+    "errors": {
+        "imagePickError": "Error picking image"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "back": "Back"
+    }
+}
