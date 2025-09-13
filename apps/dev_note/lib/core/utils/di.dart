@@ -8,5 +8,6 @@ void setupDi() {
   getIt
     ..registerSingleton<TokenHiveRepo>(TokenHiveRepo())
     ..registerSingleton<DioClient>(DioClient(getIt<TokenHiveRepo>()))
-    ..registerSingleton<AuthRepository>(AuthRepository(getIt<DioClient>().dio));
+    ..registerSingleton<AuthRepository>(AuthRepository(getIt<DioClient>().dio))
+    ..registerSingleton<UserRepository>(UserRepository(getIt<DioClient>().dio));
 }

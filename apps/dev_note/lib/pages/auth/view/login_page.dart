@@ -1,16 +1,25 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dev_note/core/extensions/context_color.dart';
+import 'package:dev_note/core/extensions/context_text_theme.dart';
+import 'package:dev_note/core/extensions/translation_api_exception.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/router/app_router.gr.dart';
 import 'package:dev_note/core/theme/app_sizes.dart';
-import 'package:dev_note/main.dart';
+import 'package:dev_note/core/utils/di.dart';
+import 'package:dev_note/pages/auth/view/cubit/login_cubit.dart';
 import 'package:dev_note/pages/auth/view/widget/shared/glass_container.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:p_repositories/repositories.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage(name: 'login')
-class LoginPageContent extends StatelessWidget {
+class LoginPageContent extends HookWidget {
   LoginPageContent({
     super.key,
   });
@@ -26,9 +35,17 @@ class LoginPageContent extends StatelessWidget {
       ],
     ),
   });
+  String get email => form.control('email').value as String;
+  String get password => form.control('password').value as String;
 
   @override
   Widget build(BuildContext context) {
+    final loginBloc = useBloc(
+      () => LoginCubit(
+        authRepository: getIt<AuthRepository>(),
+        userRepository: getIt<UserRepository>(),
+      ),
+    );
     return Center(
       child: GlassContainer(
         child: Column(
@@ -69,13 +86,17 @@ class LoginPageContent extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   gapH12,
                   ReactiveTextField<String>(
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) {
                       form.markAllAsTouched();
                       if (form.valid) {
-                        logger.info('Logowanie...');
+                        loginBloc.login(
+                          email,
+                          password,
+                        );
                       }
                     },
                     validationMessages: {
@@ -101,11 +122,35 @@ class LoginPageContent extends StatelessWidget {
                 ],
               ),
             ),
+            BlocBuilder<LoginCubit, LoginState>(
+              bloc: loginBloc,
+              builder: (context, state) {
+                if (state case LoginFailure(:final exception)) {
+                  return CustomLoginError(exception: exception);
+                }
+                if (state case LoginLoading()) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
 
             gapH12,
             Center(
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  form.markAllAsTouched();
+                  if (form.valid) {
+                    loginBloc.login(
+                      email,
+                      password,
+                    );
+                  }
+                },
                 label: Text(LocaleKeys.auth_login.tr()),
                 icon: Icon(
                   PhosphorIcons.arrowRight(PhosphorIconsStyle.thin),
@@ -150,5 +195,60 @@ class LoginPageContent extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+//TODO do refkatoryzacjai na pływający widżet
+
+class CustomLoginError extends StatelessWidget {
+  const CustomLoginError({
+    required this.exception,
+    super.key,
+  });
+
+  final ApiException exception;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(Sizes.p8),
+        child: Container(
+          padding: const EdgeInsets.all(Sizes.p8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            gradient: RadialGradient(
+              radius: 15,
+              focal: Alignment.bottomCenter,
+              focalRadius: 0.1,
+              center: Alignment.bottomCenter,
+              colors: [
+                Colors.white.withValues(alpha: 0.7),
+                Colors.white.withValues(alpha: 0),
+              ],
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                PhosphorIcons.warningDiamond(
+                  PhosphorIconsStyle.thin,
+                ),
+                color: context.colorScheme.error,
+              ),
+              gapW8,
+              Text(
+                exception.message,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colorScheme.error,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fadeIn(duration: 300.ms);
   }
 }

@@ -33,7 +33,11 @@
         "resetCodeInvalid": "Code must be a number"
     },
     "errors": {
-        "imagePickError": "Error picking image"
+        "imagePickError": "Error picking image",
+        "networkError": "No internet connection",
+        "serverError": "Server error, please try again later",
+        "jsonParseError": "Data processing error, please try again later",
+        "unknownError": "An unknown error occurred, please try again later"
     },
     "common": {
         "loading": "Loading...",

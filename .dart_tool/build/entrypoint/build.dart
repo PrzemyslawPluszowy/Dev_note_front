@@ -2,7 +2,7 @@
 // ignore_for_file: directives_ordering
 // build_runner >=2.4.16
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:build_runner_core/build_runner_core.dart' as _i1;
+import 'package:build_runner/src/package_graph/apply_builders.dart' as _i1;
 import 'dart:isolate' as _i2;
 import 'package:build_runner/src/build_script_generate/build_process_state.dart'
     as _i3;

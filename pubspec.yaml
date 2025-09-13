@@ -8,8 +8,9 @@ dev_dependencies:
 
 workspace:
   - apps/dev_note
-  - packages/models
-  - packages/repositories
+  - packages/p_models
+  - packages/p_repositories
+  - packages/p_utils
 
 melos:
   scripts:
@@ -69,8 +70,11 @@ melos:
         echo "🎉 All packages now use same latest versions!"
 
 dependency_overrides:
-  build_runner: ^2.8.0
   build: ^4.0.0
-  retrofit_generator: ^10.0.5
+  build_runner: ^2.8.0
   freezed: ^3.2.3
   json_serializable: ^6.11.1
+
+  retrofit_generator: ^10.0.5
+dependencies:
+  equatable: ^2.0.7

@@ -1,0 +1,22 @@
+name: p_utils
+description: Utilities package for DevNote app
+version: 0.0.1
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.9.0
+  p_models: ^0.0.1
+  flutter_hooks: ^0.21.3+1
+  bloc: ^9.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mocktail: ^1.0.4
+
+resolution: workspace

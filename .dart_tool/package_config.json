@@ -56,6 +56,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "bloc",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/bloc-9.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/boolean_selector-2.1.2",
       "packageUri": "lib/",
@@ -348,6 +354,12 @@
       "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/flutter_animate-4.5.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_bloc",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/flutter_bloc-9.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "flutter_gen_core",
@@ -656,10 +668,22 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "mocktail",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/mocktail-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "mustache_template",
       "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/mustache_template-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "nested",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "nm",
@@ -780,6 +804,12 @@
       "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/protobuf-4.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/provider-6.1.5+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "pub_semver",
@@ -1119,13 +1149,19 @@
     },
     {
       "name": "p_models",
-      "rootUri": "../packages/models",
+      "rootUri": "../packages/p_models",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
     {
       "name": "p_repositories",
-      "rootUri": "../packages/repositories",
+      "rootUri": "../packages/p_repositories",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "p_utils",
+      "rootUri": "../packages/p_utils",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     }

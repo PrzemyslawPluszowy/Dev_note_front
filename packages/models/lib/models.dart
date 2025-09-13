@@ -1,9 +1,0 @@
-export 'package:p_models/models.dart';
-export 'package:p_models/src/auth/auth_user_response.dart';
-export 'package:p_models/src/auth/login_request.dart';
-export 'package:p_models/src/auth/login_response.dart';
-export 'package:p_models/src/auth/refresh_request.dart';
-export 'package:p_models/src/auth/refresh_response.dart';
-export 'package:p_models/src/shared/bad_response.dart';
-export 'package:p_models/src/shared/file_record.dart';
-export 'package:p_models/src/user/auth_user_response.dart';

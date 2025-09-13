@@ -1,0 +1,27 @@
+{
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/.DS_Store": false,
+        "**/Thumbs.db": false,
+        "vev": false,
+        "packages/repositories/.dart_tool": false,
+        "**/.dart_tool": false,
+        "packages/repositories/*.*": false,
+        ".dart_tool": false,
+        "**/scripts": false,
+        "scripts": false,
+        "apps/dev_note/.idea": false,
+        "**/.idea": false,
+        "apps/dev_note/*.*": false,
+        ".idea": false,
+        "apps/dev_note/linux": false,
+        "**/linux": false,
+        "linux": false
+    },
+    "explorerExclude.backup": {},
+    "cSpell.words": [
+        "odmontowaniu"
+    ]
+}

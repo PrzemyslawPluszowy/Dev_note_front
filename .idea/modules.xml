@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
 <module fileurl="file://$PROJECT_DIR$/apps/dev_note/melos_dev_note.iml" filepath="$PROJECT_DIR$/apps/dev_note/melos_dev_note.iml" />
-<module fileurl="file://$PROJECT_DIR$/packages/models/melos_p_models.iml" filepath="$PROJECT_DIR$/packages/models/melos_p_models.iml" />
-<module fileurl="file://$PROJECT_DIR$/packages/repositories/melos_p_repositories.iml" filepath="$PROJECT_DIR$/packages/repositories/melos_p_repositories.iml" />
+<module fileurl="file://$PROJECT_DIR$/packages/p_models/melos_p_models.iml" filepath="$PROJECT_DIR$/packages/p_models/melos_p_models.iml" />
+<module fileurl="file://$PROJECT_DIR$/packages/p_repositories/melos_p_repositories.iml" filepath="$PROJECT_DIR$/packages/p_repositories/melos_p_repositories.iml" />
+<module fileurl="file://$PROJECT_DIR$/packages/p_utils/melos_p_utils.iml" filepath="$PROJECT_DIR$/packages/p_utils/melos_p_utils.iml" />
 <module fileurl="file://$PROJECT_DIR$/melos_devnotedekstop.iml" filepath="$PROJECT_DIR$/melos_devnotedekstop.iml" />
     </modules>
   </component>
