@@ -1059,9 +1059,9 @@
     },
     {
       "name": "very_good_analysis",
-      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/very_good_analysis-9.0.0",
+      "rootUri": "file:///Users/przemyslawnowak/.pub-cache/hosted/pub.dev/very_good_analysis-10.0.0-rc.2",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "vm_service",

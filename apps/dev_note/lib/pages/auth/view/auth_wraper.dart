@@ -12,7 +12,10 @@ class AuthWrapper extends StatelessWidget {
     return Theme(
       data: AppTheme.light,
       child: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
+          color: Colors.black,
           image: DecorationImage(
             image: AssetImage(Assets.images.loginBg.path),
             fit: BoxFit.cover,

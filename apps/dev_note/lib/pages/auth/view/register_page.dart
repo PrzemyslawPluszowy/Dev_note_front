@@ -4,12 +4,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/router/app_router.gr.dart';
 import 'package:dev_note/core/theme/app_sizes.dart';
-import 'package:dev_note/main.dart';
 import 'package:dev_note/pages/auth/view/widget/shared/glass_container.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -35,7 +35,7 @@ class RegisterPage extends HookWidget {
         selectedImage.value = File(image.path);
       }
     } catch (e, s) {
-      logger.error('Błąd podczas wybierania obrazu: $e $s');
+      Logger.error(e.toString(), stackTrace: s);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -130,8 +130,8 @@ class RegisterPage extends HookWidget {
               ),
               gapH20,
               TextButton(
-                onPressed: () {
-                  context.router.navigate(Login());
+                onPressed: () async {
+                  await context.router.navigate(Login());
                 },
                 child: Text(
                   LocaleKeys.auth_alreadyHaveAccount.tr(),

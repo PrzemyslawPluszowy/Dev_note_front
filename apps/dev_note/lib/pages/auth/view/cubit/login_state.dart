@@ -14,7 +14,7 @@ final class LoginSuccess extends LoginState {}
 
 final class LoginFailure extends LoginState {
   LoginFailure({required this.exception});
-  final ApiException exception;
+  final Exception exception;
 
   @override
   List<Object?> get props => [exception];

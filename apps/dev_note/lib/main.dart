@@ -2,20 +2,20 @@ import 'package:dev_note/core/router/app_router.dart';
 import 'package:dev_note/core/theme/app_theme.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:dev_note/core/utils/hive_helper.dart';
+import 'package:dev_note/services/auth/auth_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:talker_logger/talker_logger.dart';
-
-final logger = TalkerLogger();
+import 'package:p_utils/p_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await HiveHelper.init();
+  Logger.initialize(null);
 
   setupDi();
+  await getIt<AuthService>().autoLogin();
 
-  // Natywne ustawienia Swift w MainFlutterWindow.swift obsługują wszystko
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('pl', 'PL'), Locale('en', 'US')],
@@ -37,7 +37,9 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
-      routerConfig: _appRouter.config(),
+      routerConfig: _appRouter.config(
+        reevaluateListenable: getIt<AuthService>(),
+      ),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

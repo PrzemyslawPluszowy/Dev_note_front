@@ -57,8 +57,8 @@ class ResendActivationLink extends StatelessWidget {
                   LocaleKeys.auth_backToLogin.tr(),
                   style: const TextStyle(color: Colors.white),
                 ),
-                onPressed: () {
-                  context.router.navigate(Login());
+                onPressed: () async {
+                  await context.router.navigate(Login());
                 },
               ),
             ),

@@ -13,7 +13,8 @@
       "name": "Run Dev Note",
       "request": "launch",
       "type": "dart",
-      "program": "apps/dev_note/lib/main.dart"
+      "program": "apps/dev_note/lib/main.dart",
+
     },
     {
       "name": "Run Auth Data Source",

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dev_note/core/utils/hive_registrar.g.dart';
-import 'package:dev_note/main.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:p_repositories/repositories.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'hive_helper.g.dart';
@@ -33,7 +33,7 @@ class HiveHelper {
         }
       }
 
-      logger.error('Error: $e, StackTrace: $s');
+      Logger.error('Error during Hive initialization', err: e, stackTrace: s);
     }
 
     // Usunięcie danych z bazy danych, aby uniknąć konfliktów
@@ -51,6 +51,8 @@ class HiveHelper {
 
 @GenerateAdapters([
   AdapterSpec<LoginRequest>(),
+  AdapterSpec<LoginResponse>(),
+  AdapterSpec<AuthUserResponse>(),
 ])
 // To jes to do generacji plików *.g.dart nie usuwać
 // ignore: unused_element

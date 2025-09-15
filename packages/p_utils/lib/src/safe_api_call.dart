@@ -61,9 +61,7 @@ class SafeApiCall {
       );
       _logError('Parsed BadResponse successfully', badResponse);
 
-      final errors = badResponse.errors
-          .map((error) => '${error.field}: ${error.message}')
-          .toList();
+      final errors = badResponse.errors.map((error) => error.message).toList();
       return BadResponseException(errors: errors);
     } on FormatException catch (error, stackTrace) {
       _logError('Failed to parse BadResponse', '$error\n$stackTrace');

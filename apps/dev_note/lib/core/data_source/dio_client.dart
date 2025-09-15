@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:dev_note/core/env/env.dart';
+import 'package:dev_note/services/auth/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:p_repositories/repositories.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 
 class DioClient {
-  DioClient(this.tokenStorage);
+  DioClient({required this.tokenStorage, required this.authService});
 
   final TokenHiveRepo tokenStorage;
+  final AuthService authService;
 
   /// Dio instance
   late final Dio dio = _createDio();
@@ -16,7 +20,7 @@ class DioClient {
     final dioInstance = Dio()..options.baseUrl = Env.apiUrl;
 
     dioInstance.interceptors
-      ..add(AuthInterceptor(dioInstance, tokenStorage))
+      ..add(AuthInterceptor(dioInstance, tokenStorage, authService))
       ..add(
         TalkerDioLogger(
           settings: const TalkerDioLoggerSettings(
@@ -28,13 +32,22 @@ class DioClient {
 
     return dioInstance;
   }
+
+  void setToken(String token) {
+    dio.options.headers['Authorization'] = 'Bearer $token';
+  }
+
+  void clearAuthToken() {
+    dio.options.headers.remove('Authorization');
+  }
 }
 
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this.dio, this.tokenStorage);
+  AuthInterceptor(this.dio, this.tokenStorage, this.authService);
 
   final Dio dio;
   final TokenHiveRepo tokenStorage;
+  final AuthService authService;
   Future<String?>? _refreshFuture;
 
   @override
@@ -82,7 +95,7 @@ class AuthInterceptor extends Interceptor {
     }
 
     // Jeśli refresh się nie udał, przekaż oryginalny błąd
-    handler.next(err);
+    unawaited(authService.logout());
   }
 
   Future<String?> _refreshToken() async {
@@ -90,6 +103,7 @@ class AuthInterceptor extends Interceptor {
       final tokens = await tokenStorage.getAccessToken();
       if (tokens?.refreshToken == null) return null;
 
+      dio.options.headers['Authorization'] = '';
       final response = await dio.post<RefreshResponse>(
         'auth/refresh',
         data: RefreshRequest(refreshToken: tokens!.refreshToken),

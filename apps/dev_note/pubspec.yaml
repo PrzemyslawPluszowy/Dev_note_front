@@ -53,7 +53,7 @@ dependencies:
   retrofit: ^4.7.2
   rxdart: ^0.28.0
   talker_dio_logger: ^5.0.0
-  talker_logger: ^5.0.0
+  # talker_logger: ^5.0.0
 
 dev_dependencies:
   auto_route_generator: ^10.2.4
@@ -71,7 +71,7 @@ dev_dependencies:
   retrofit_generator: ^10.0.5
 
   # Linting and code quality
-  very_good_analysis: ^9.0.0
+  very_good_analysis: ^10.0.0-rc.2
 
 # Skrypty do generowania
 scripts:

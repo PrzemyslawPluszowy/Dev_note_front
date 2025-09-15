@@ -49,8 +49,7 @@
         "reactive_forms",
         "retrofit",
         "rxdart",
-        "talker_dio_logger",
-        "talker_logger"
+        "talker_dio_logger"
       ],
       "devDependencies": [
         "auto_route_generator",
@@ -111,7 +110,8 @@
         "dio",
         "flutter",
         "flutter_hooks",
-        "p_models"
+        "p_models",
+        "talker"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -609,13 +609,6 @@
       ]
     },
     {
-      "name": "flutter_lints",
-      "version": "6.0.0",
-      "dependencies": [
-        "lints"
-      ]
-    },
-    {
       "name": "flutter_test",
       "version": "0.0.0",
       "dependencies": [
@@ -634,10 +627,17 @@
       ]
     },
     {
-      "name": "bloc",
-      "version": "9.0.0",
+      "name": "flutter_lints",
+      "version": "6.0.0",
       "dependencies": [
-        "meta"
+        "lints"
+      ]
+    },
+    {
+      "name": "talker",
+      "version": "5.0.0",
+      "dependencies": [
+        "talker_logger"
       ]
     },
     {
@@ -657,6 +657,13 @@
         "meta",
         "sky_engine",
         "vector_math"
+      ]
+    },
+    {
+      "name": "bloc",
+      "version": "9.0.0",
+      "dependencies": [
+        "meta"
       ]
     },
     {
@@ -682,7 +689,7 @@
     },
     {
       "name": "very_good_analysis",
-      "version": "9.0.0",
+      "version": "10.0.0-rc.2",
       "dependencies": []
     },
     {
@@ -743,14 +750,6 @@
         "lean_builder",
         "path",
         "source_gen"
-      ]
-    },
-    {
-      "name": "talker_logger",
-      "version": "5.0.0",
-      "dependencies": [
-        "ansicolor",
-        "web"
       ]
     },
     {
@@ -1093,11 +1092,6 @@
       ]
     },
     {
-      "name": "lints",
-      "version": "6.0.0",
-      "dependencies": []
-    },
-    {
       "name": "leak_tracker_flutter_testing",
       "version": "3.0.10",
       "dependencies": [
@@ -1124,6 +1118,19 @@
       "dependencies": [
         "clock",
         "collection"
+      ]
+    },
+    {
+      "name": "lints",
+      "version": "6.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "talker_logger",
+      "version": "5.0.0",
+      "dependencies": [
+        "ansicolor",
+        "web"
       ]
     },
     {
@@ -1204,18 +1211,6 @@
         "watcher",
         "xxh3",
         "yaml"
-      ]
-    },
-    {
-      "name": "ansicolor",
-      "version": "2.0.3",
-      "dependencies": []
-    },
-    {
-      "name": "talker",
-      "version": "5.0.0",
-      "dependencies": [
-        "talker_logger"
       ]
     },
     {
@@ -1469,6 +1464,11 @@
         "path",
         "vm_service"
       ]
+    },
+    {
+      "name": "ansicolor",
+      "version": "2.0.3",
+      "dependencies": []
     },
     {
       "name": "image",

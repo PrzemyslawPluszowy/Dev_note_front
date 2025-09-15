@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:dev_note/core/extensions/context_color.dart';
-import 'package:dev_note/core/extensions/context_text_theme.dart';
-import 'package:dev_note/core/extensions/translation_api_exception.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/router/app_router.gr.dart';
 import 'package:dev_note/core/theme/app_sizes.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:dev_note/pages/auth/view/cubit/login_cubit.dart';
+import 'package:dev_note/pages/auth/view/widget/shared/custom_login_error.dart';
 import 'package:dev_note/pages/auth/view/widget/shared/glass_container.dart';
+import 'package:dev_note/services/auth/auth_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -42,6 +41,8 @@ class LoginPageContent extends HookWidget {
   Widget build(BuildContext context) {
     final loginBloc = useBloc(
       () => LoginCubit(
+        tokenHiveRepo: getIt<TokenHiveRepo>(),
+        authService: getIt<AuthService>(),
         authRepository: getIt<AuthRepository>(),
         userRepository: getIt<UserRepository>(),
       ),
@@ -90,10 +91,10 @@ class LoginPageContent extends HookWidget {
                   gapH12,
                   ReactiveTextField<String>(
                     textInputAction: TextInputAction.done,
-                    onSubmitted: (_) {
+                    onSubmitted: (_) async {
                       form.markAllAsTouched();
                       if (form.valid) {
-                        loginBloc.login(
+                        await loginBloc.login(
                           email,
                           password,
                         );
@@ -129,39 +130,51 @@ class LoginPageContent extends HookWidget {
                   return CustomLoginError(exception: exception);
                 }
                 if (state case LoginLoading()) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
+                  return Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(Sizes.p8),
+                      width: Sizes.p48,
+                      height: Sizes.p48,
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
                     ),
-                  );
+                  ).animate().fadeIn(duration: 300.ms);
                 }
                 return const SizedBox.shrink();
               },
             ),
 
             gapH12,
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  form.markAllAsTouched();
-                  if (form.valid) {
-                    loginBloc.login(
-                      email,
-                      password,
-                    );
-                  }
-                },
-                label: Text(LocaleKeys.auth_login.tr()),
-                icon: Icon(
-                  PhosphorIcons.arrowRight(PhosphorIconsStyle.thin),
-                ),
-              ),
+            BlocBuilder<LoginCubit, LoginState>(
+              bloc: loginBloc,
+              builder: (context, state) {
+                return Center(
+                  child: ElevatedButton.icon(
+                    onPressed: (state is LoginLoading)
+                        ? null
+                        : () async {
+                            form.markAllAsTouched();
+                            if (form.valid) {
+                              await loginBloc.login(
+                                email,
+                                password,
+                              );
+                            }
+                          },
+                    label: Text(LocaleKeys.auth_login.tr()),
+                    icon: Icon(
+                      PhosphorIcons.arrowRight(PhosphorIconsStyle.thin),
+                    ),
+                  ),
+                );
+              },
             ),
             gapH12,
             Center(
               child: TextButton(
-                onPressed: () {
-                  context.router.navigate(Register());
+                onPressed: () async {
+                  await context.router.navigate(Register());
                 },
                 child: Text(
                   LocaleKeys.auth_register.tr(),
@@ -171,8 +184,8 @@ class LoginPageContent extends HookWidget {
             ),
             Center(
               child: TextButton(
-                onPressed: () {
-                  context.router.navigate(ForgotPassword());
+                onPressed: () async {
+                  await context.router.navigate(ForgotPassword());
                 },
                 child: Text(
                   LocaleKeys.auth_forgotPassword.tr(),
@@ -182,8 +195,8 @@ class LoginPageContent extends HookWidget {
             ),
             Center(
               child: TextButton(
-                onPressed: () {
-                  context.router.navigate(ResendActivationLinkRoute());
+                onPressed: () async {
+                  await context.router.navigate(ResendActivationLinkRoute());
                 },
                 child: Text(
                   LocaleKeys.auth_lostActivationLink.tr(),
@@ -195,60 +208,5 @@ class LoginPageContent extends HookWidget {
         ),
       ),
     );
-  }
-}
-
-//TODO do refkatoryzacjai na pływający widżet
-
-class CustomLoginError extends StatelessWidget {
-  const CustomLoginError({
-    required this.exception,
-    super.key,
-  });
-
-  final ApiException exception;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Sizes.p8),
-        child: Container(
-          padding: const EdgeInsets.all(Sizes.p8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            gradient: RadialGradient(
-              radius: 15,
-              focal: Alignment.bottomCenter,
-              focalRadius: 0.1,
-              center: Alignment.bottomCenter,
-              colors: [
-                Colors.white.withValues(alpha: 0.7),
-                Colors.white.withValues(alpha: 0),
-              ],
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                PhosphorIcons.warningDiamond(
-                  PhosphorIconsStyle.thin,
-                ),
-                color: context.colorScheme.error,
-              ),
-              gapW8,
-              Text(
-                exception.message,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.error,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ).animate().fadeIn(duration: 300.ms);
   }
 }
