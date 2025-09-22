@@ -19,7 +19,7 @@ class BoardPage extends StatelessWidget {
           children: [
             OutlinedButton(
               onPressed: () async {
-                getIt<AuthService>().logout();
+                await getIt<AuthService>().logout();
               },
               child: const Text('Log Out'),
             ),

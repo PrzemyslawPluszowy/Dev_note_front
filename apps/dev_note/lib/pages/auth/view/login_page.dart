@@ -71,10 +71,8 @@ class LoginPageContent extends HookWidget {
                       form.focus('password');
                     },
                     validationMessages: {
-                      ValidationMessage.required: (_) =>
-                          LocaleKeys.validation_emailRequired.tr(),
-                      ValidationMessage.email: (_) =>
-                          LocaleKeys.validation_emailInvalid.tr(),
+                      ValidationMessage.required: (_) => LocaleKeys.validation_emailRequired.tr(),
+                      ValidationMessage.email: (_) => LocaleKeys.validation_emailInvalid.tr(),
                     },
                     formControlName: 'email',
                     decoration: InputDecoration(
@@ -101,10 +99,8 @@ class LoginPageContent extends HookWidget {
                       }
                     },
                     validationMessages: {
-                      ValidationMessage.required: (_) =>
-                          LocaleKeys.validation_passwordRequired.tr(),
-                      ValidationMessage.minLength: (_) =>
-                          LocaleKeys.validation_passwordMinLength.tr(),
+                      ValidationMessage.required: (_) => LocaleKeys.validation_passwordRequired.tr(),
+                      ValidationMessage.minLength: (_) => LocaleKeys.validation_passwordMinLength.tr(),
                     },
                     formControlName: 'password',
                     keyboardType: TextInputType.visiblePassword,

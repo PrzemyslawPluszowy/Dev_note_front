@@ -24,8 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login(String email, String password) async {
     emit(LoginLoading());
-    // TODO: add delay to show loading indicator
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+
     try {
       final request = LoginRequest(
         email: email,

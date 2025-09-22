@@ -2,6 +2,10 @@
 # Used by Very Good Ventures and top Flutter teams
 include: package:very_good_analysis/analysis_options.yaml
 
+# Dart formatter configuration
+formatter:
+  page_width: 120
+
 # Dart Code Metrics - Advanced code quality analysis
 analyzer:
   enable-experiment:
@@ -19,6 +23,7 @@ analyzer:
     - "**/generated/**"
     - "**/build/**"
     - "**/.dart_tool/**"
+    - "**/lib/core/gen/**"
 
 # Custom rules for this project
 linter:

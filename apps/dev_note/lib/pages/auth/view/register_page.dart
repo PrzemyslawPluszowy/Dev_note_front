@@ -4,11 +4,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/router/app_router.gr.dart';
 import 'package:dev_note/core/theme/app_sizes.dart';
+import 'package:dev_note/core/utils/di.dart';
+import 'package:dev_note/pages/auth/view/cubit/register_cubit.dart';
+import 'package:dev_note/pages/auth/view/widget/shared/auth_info_message.dart';
+import 'package:dev_note/pages/auth/view/widget/shared/custom_login_error.dart';
 import 'package:dev_note/pages/auth/view/widget/shared/glass_container.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:p_repositories/repositories.dart';
 import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -54,6 +60,9 @@ class RegisterPage extends HookWidget {
     final confirmPassword = useTextEditingController();
     final name = useTextEditingController();
     final showPassword = useState(false);
+    final registerCubit = useBloc(
+      () => RegisterCubit(authRepository: getIt<AuthRepository>()),
+    );
 
     final form = useMemoized(
       () => FormGroup(
@@ -94,51 +103,97 @@ class RegisterPage extends HookWidget {
       child: GlassContainer(
         child: Padding(
           padding: const EdgeInsets.all(Sizes.p16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _avatarPicker(context, selectedImage),
-              gapH12,
-              ReactiveForm(
-                formGroup: form,
-                child: Column(
-                  children: [
-                    _emailForm(email, form),
-                    gapH12,
-                    _passwordForm(password, form, showPassword),
-                    gapH12,
-                    _confirmPasswordForm(confirmPassword, form, showPassword),
-                    gapH12,
-                    _nameForm(name, form),
+          child: BlocBuilder<RegisterCubit, RegisterState>(
+            bloc: registerCubit,
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _avatarPicker(context, selectedImage),
+                  gapH12,
+                  ReactiveForm(
+                    formGroup: form,
+                    child: Column(
+                      children: [
+                        _emailForm(email, form),
+                        gapH12,
+                        _passwordForm(password, form, showPassword),
+                        gapH12,
+                        _confirmPasswordForm(
+                          confirmPassword,
+                          form,
+                          showPassword,
+                        ),
+                        gapH12,
+                        _nameForm(name, form, () async {
+                          form.markAllAsTouched();
+                          if (form.valid) {
+                            if (state is! RegisterLoading) {
+                              await registerCubit.register(
+                                email.text,
+                                password.text,
+                                name.text,
+                                selectedImage.value,
+                              );
+                            }
+                          }
+                        }),
+                      ],
+                    ),
+                  ),
+                  if (state case RegisterLoading()) ...[
+                    gapH20,
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
-                ),
-              ),
+                  if (state case RegisterFailure()) ...[
+                    gapH20,
+                    CustomLoginError(exception: state.errorMessage),
+                  ],
+                  if (state case RegisterSuccess(:final String message)) ...[
+                    gapH20,
+                    AuthInfoMessage(message: message),
+                  ],
 
-              gapH20,
-              ElevatedButton.icon(
-                onPressed: () {
-                  form.markAllAsTouched();
-                  if (form.valid) {
-                    // Przykład nawigacji po udanej rejestracji
-                    // context.router.navigate(Login());
-                  }
-                },
-                label: Text(LocaleKeys.auth_register.tr()),
-                icon: Icon(
-                  PhosphorIcons.arrowRight(PhosphorIconsStyle.thin),
-                ),
-              ),
-              gapH20,
-              TextButton(
-                onPressed: () async {
-                  await context.router.navigate(Login());
-                },
-                child: Text(
-                  LocaleKeys.auth_alreadyHaveAccount.tr(),
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+                  gapH20,
+                  ElevatedButton.icon(
+                    onPressed: (state is RegisterLoading)
+                        ? null
+                        : () async {
+                            form.markAllAsTouched();
+                            if (form.valid) {
+                              if (state is! RegisterLoading) {
+                                await registerCubit.register(
+                                  email.text,
+                                  password.text,
+                                  name.text,
+                                  selectedImage.value,
+                                );
+                              }
+                            }
+                          },
+
+                    label: Text(LocaleKeys.auth_register.tr()),
+                    icon: Icon(
+                      PhosphorIcons.arrowRight(PhosphorIconsStyle.thin),
+                    ),
+                  ),
+                  gapH20,
+                  TextButton(
+                    onPressed: () async {
+                      await context.router.navigate(Login());
+                    },
+                    child: Text(
+                      LocaleKeys.auth_alreadyHaveAccount.tr(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -148,17 +203,19 @@ class RegisterPage extends HookWidget {
   ReactiveTextField<String> _nameForm(
     TextEditingController name,
     FormGroup form,
+    VoidCallback onSubmitted,
   ) {
     return ReactiveTextField<String>(
       textInputAction: TextInputAction.done,
       controller: name,
       onSubmitted: (_) {
         form.markAllAsTouched();
-        if (form.valid) {}
+        if (form.valid) {
+          onSubmitted();
+        }
       },
       validationMessages: {
-        ValidationMessage.required: (_) =>
-            LocaleKeys.validation_nameRequired.tr(),
+        ValidationMessage.required: (_) => LocaleKeys.validation_nameRequired.tr(),
       },
       formControlName: 'name',
       decoration: InputDecoration(
@@ -187,10 +244,8 @@ class RegisterPage extends HookWidget {
         form.focus('name');
       },
       validationMessages: {
-        ValidationMessage.required: (_) =>
-            LocaleKeys.validation_confirmPasswordRequired.tr(),
-        ValidationMessage.minLength: (_) =>
-            LocaleKeys.validation_passwordMinLength.tr(),
+        ValidationMessage.required: (_) => LocaleKeys.validation_confirmPasswordRequired.tr(),
+        ValidationMessage.minLength: (_) => LocaleKeys.validation_passwordMinLength.tr(),
         'mustMatch': (_) => LocaleKeys.validation_passwordsMustMatch.tr(),
       },
       formControlName: 'confirmPassword',
@@ -232,12 +287,9 @@ class RegisterPage extends HookWidget {
         form.focus('confirmPassword');
       },
       validationMessages: {
-        ValidationMessage.required: (_) =>
-            LocaleKeys.validation_passwordRequired.tr(),
-        ValidationMessage.minLength: (_) =>
-            LocaleKeys.validation_passwordMinLength.tr(),
-        ValidationMessage.pattern: (_) =>
-            LocaleKeys.validation_passwordPattern.tr(),
+        ValidationMessage.required: (_) => LocaleKeys.validation_passwordRequired.tr(),
+        ValidationMessage.minLength: (_) => LocaleKeys.validation_passwordMinLength.tr(),
+        ValidationMessage.pattern: (_) => LocaleKeys.validation_passwordPattern.tr(),
       },
       formControlName: 'password',
       keyboardType: TextInputType.visiblePassword,
@@ -276,8 +328,7 @@ class RegisterPage extends HookWidget {
         form.focus('password');
       },
       validationMessages: {
-        ValidationMessage.required: (_) =>
-            LocaleKeys.validation_emailRequired.tr(),
+        ValidationMessage.required: (_) => LocaleKeys.validation_emailRequired.tr(),
         ValidationMessage.email: (_) => LocaleKeys.validation_emailInvalid.tr(),
       },
       formControlName: 'email',
@@ -301,9 +352,7 @@ class RegisterPage extends HookWidget {
       child: CircleAvatar(
         radius: 70,
         backgroundColor: Colors.white,
-        backgroundImage: selectedImage.value != null
-            ? FileImage(selectedImage.value!)
-            : null,
+        backgroundImage: selectedImage.value != null ? FileImage(selectedImage.value!) : null,
         child: selectedImage.value == null
             ? Icon(
                 PhosphorIcons.userPlus(

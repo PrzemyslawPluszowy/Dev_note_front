@@ -37,6 +37,10 @@ class AuthService extends ChangeNotifier {
   void loginCorrect(AuthUserResponse newUser) {
     user = newUser;
     _authState = AuthState.authorized;
+
+    // Dodaj auth interceptor po pomyślnym zalogowaniu
+    getIt<DioClient>().addAuthInterceptor();
+
     notifyListeners();
   }
 
@@ -46,7 +50,10 @@ class AuthService extends ChangeNotifier {
 
     _authState = AuthState.unauthorized;
     await tokenHiveRepo.clearTokens();
-    getIt<DioClient>().clearAuthToken();
+
+    // Usuń auth interceptor przy wylogowaniu
+    getIt<DioClient>().removeAuthInterceptor();
+
     notifyListeners();
   }
 
@@ -66,11 +73,18 @@ class AuthService extends ChangeNotifier {
         return;
       }
 
+      // Dodaj auth interceptor przed sprawdzeniem użytkownika
+      getIt<DioClient>().addAuthInterceptor();
+
       final userResponse = await userRepository.userMe();
       user = userResponse;
       changeAuthState(AuthState.authorized);
     } catch (e, s) {
       Logger.error('Auto login failed', err: e, stackTrace: s);
+
+      // Usuń auth interceptor jeśli auto login się nie udał
+      getIt<DioClient>().removeAuthInterceptor();
+
       changeAuthState(AuthState.unauthorized);
       return;
     }

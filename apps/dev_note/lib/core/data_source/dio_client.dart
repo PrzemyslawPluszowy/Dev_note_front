@@ -4,6 +4,7 @@ import 'package:dev_note/core/env/env.dart';
 import 'package:dev_note/services/auth/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:p_repositories/repositories.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 
@@ -16,21 +17,47 @@ class DioClient {
   /// Dio instance
   late final Dio dio = _createDio();
 
-  Dio _createDio() {
-    final dioInstance = Dio()..options.baseUrl = Env.apiUrl;
+  /// Auth interceptor instance (null gdy nie jest dodany)
+  AuthInterceptor? _authInterceptor;
 
-    dioInstance.interceptors
-      ..add(AuthInterceptor(dioInstance, tokenStorage, authService))
-      ..add(
-        TalkerDioLogger(
-          settings: const TalkerDioLoggerSettings(
-            printRequestHeaders: true,
-            printResponseHeaders: true,
-          ),
+  Dio _createDio() {
+    final dioInstance = Dio()
+      ..options.connectTimeout = const Duration(seconds: 30)
+      ..options.receiveTimeout = const Duration(seconds: 30)
+      ..options.sendTimeout = const Duration(seconds: 30)
+      ..options.responseType = ResponseType.json
+      ..options.baseUrl = Env.apiUrl;
+
+    // Dodaj tylko logger interceptor na początku
+    dioInstance.interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printRequestHeaders: true,
+          printResponseHeaders: true,
         ),
-      );
+      ),
+    );
 
     return dioInstance;
+  }
+
+  /// Dodaj auth interceptor po zalogowaniu
+  void addAuthInterceptor() {
+    if (_authInterceptor == null) {
+      _authInterceptor = AuthInterceptor(dio, tokenStorage, authService);
+      dio.interceptors.insert(0, _authInterceptor!); // Dodaj na początku
+      Logger.debug('AuthInterceptor added');
+    }
+  }
+
+  /// Usuń auth interceptor po wylogowaniu
+  void removeAuthInterceptor() {
+    if (_authInterceptor != null) {
+      dio.interceptors.remove(_authInterceptor);
+      _authInterceptor = null;
+      clearAuthToken();
+      Logger.debug('AuthInterceptor removed');
+    }
   }
 
   void setToken(String token) {
@@ -55,6 +82,7 @@ class AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    // Interceptor jest dodawany tylko po zalogowaniu, więc zawsze dodajemy token
     final token = await tokenStorage.getAccessToken();
     if (token?.accessToken.isNotEmpty ?? false) {
       options.headers['Authorization'] = 'Bearer ${token!.accessToken}';
@@ -67,9 +95,13 @@ class AuthInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    Logger.error('DioError: ${err.type} - ${err.message}');
+    Logger.error(
+      'Request: ${err.requestOptions.method} ${err.requestOptions.uri}',
+    );
+
     // Jeśli to nie 401 lub to już jest refresh request, przekaż błąd dalej
-    if (err.response?.statusCode != 401 ||
-        err.requestOptions.path.contains('auth/refresh')) {
+    if (err.response?.statusCode != 401 || err.requestOptions.path.contains('auth/refresh')) {
       return handler.next(err);
     }
 
@@ -94,8 +126,9 @@ class AuthInterceptor extends Interceptor {
       }
     }
 
-    // Jeśli refresh się nie udał, przekaż oryginalny błąd
+    // Jeśli refresh się nie udał, usuń auth interceptor i wyloguj
     unawaited(authService.logout());
+    return handler.next(err);
   }
 
   Future<String?> _refreshToken() async {
