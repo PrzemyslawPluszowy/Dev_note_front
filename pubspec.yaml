@@ -37,9 +37,30 @@ melos:
         flutter: true
 
     build:
-      description: Run build_runner for all packages
-      run: dart run build_runner build --delete-conflicting-outputs
+      description: Run build_runner - select package
+      exec: dart run build_runner build --delete-conflicting-outputs
       packageFilters:
+        dependsOn: build_runner
+
+    build-models:
+      description: Build only p_models package
+      exec: dart run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        scope: "p_models"
+        dependsOn: build_runner
+
+    build-repos:
+      description: Build only p_repositories package
+      exec: dart run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        scope: "p_repositories"
+        dependsOn: build_runner
+
+    build-app:
+      description: Build only dev_note app
+      exec: dart run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        scope: "dev_note"
         dependsOn: build_runner
 
     sync-deps:

@@ -1,0 +1,29 @@
+#!/bin/sh
+# Git pre-commit hook to format Dart code with 120 character line width
+
+# Check if dart is available
+if ! command -v dart &> /dev/null; then
+    echo "Dart is not installed or not in PATH"
+    exit 1
+fi
+
+# Get staged Dart files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.dart$')
+
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+
+echo "Formatting Dart files with 120 character line width..."
+
+# Format each staged Dart file
+for FILE in $STAGED_FILES; do
+    if [ -f "$FILE" ]; then
+        echo "  Formatting $FILE"
+        dart format --page-width=120 "$FILE"
+        git add "$FILE"
+    fi
+done
+
+echo "✅ Dart files formatted and re-staged"
+exit 0

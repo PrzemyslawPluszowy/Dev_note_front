@@ -26,10 +26,8 @@ abstract class BadResponse with _$BadResponse {
 
 @freezed
 abstract class ErrorModel with _$ErrorModel {
-  const factory ErrorModel({
-    required String field,
-    required String message,
-  }) = _ErrorModel;
+  const factory ErrorModel({required String field, required String message}) =
+      _ErrorModel;
 
   factory ErrorModel.fromJson(Map<String, dynamic> json) =>
       _$ErrorModelFromJson(json);
