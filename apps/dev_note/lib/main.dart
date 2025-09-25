@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       routerConfig: _appRouter.config(
         reevaluateListenable: getIt<AuthService>(),
       ),

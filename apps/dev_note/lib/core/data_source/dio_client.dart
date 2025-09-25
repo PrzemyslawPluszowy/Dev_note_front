@@ -26,7 +26,11 @@ class DioClient {
       ..options.receiveTimeout = const Duration(seconds: 30)
       ..options.sendTimeout = const Duration(seconds: 30)
       ..options.responseType = ResponseType.json
-      ..options.baseUrl = Env.apiUrl;
+      ..options.baseUrl = Env.apiUrl
+      ..options.headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
 
     // Dodaj tylko logger interceptor na początku
     dioInstance.interceptors.add(
@@ -136,22 +140,30 @@ class AuthInterceptor extends Interceptor {
       final tokens = await tokenStorage.getAccessToken();
       if (tokens?.refreshToken == null) return null;
 
-      dio.options.headers['Authorization'] = '';
-      final response = await dio.post<RefreshResponse>(
+      // Usuń autoryzację tylko dla refresh request
+      final response = await dio.post<Map<String, dynamic>>(
         'auth/refresh',
-        data: RefreshRequest(refreshToken: tokens!.refreshToken),
+        data: RefreshRequest(refreshToken: tokens!.refreshToken).toJson(),
+        options: Options(headers: {'Authorization': null}),
       );
 
-      final newToken = response.data?.token;
-      if (newToken != null) {
-        await tokenStorage.saveAccessToken(
-          LoginResponse(
-            accessToken: newToken,
-            refreshToken: tokens.refreshToken,
-          ),
-        );
-        return newToken;
-      }
+      if (response.data == null) return null;
+
+      final refreshResponse = RefreshResponse.fromJson(response.data!);
+      final newToken = refreshResponse.token;
+      final newRefreshToken = refreshResponse.refreshToken;
+
+      await tokenStorage.saveAccessToken(
+        LoginResponse(
+          accessToken: newToken,
+          refreshToken: newRefreshToken,
+        ),
+      );
+
+      // Aktualizuj globalne nagłówki dla przyszłych żądań
+      dio.options.headers['Authorization'] = 'Bearer $newToken';
+
+      return newToken;
     } catch (e) {
       // Jeśli refresh token jest nieprawidłowy (498), wyczyść tokeny
       if (e is DioException && e.response?.statusCode == 498) {

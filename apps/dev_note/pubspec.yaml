@@ -45,6 +45,7 @@ dependencies:
   json_annotation: ^4.9.0
   p_models: ^0.0.1
   p_repositories: ^0.0.1
+  p_shared_ui: ^0.0.1
   p_utils: ^0.0.1
   path_provider: ^2.1.5
 

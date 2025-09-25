@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
-import 'package:dev_note/core/theme/app_sizes.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:dev_note/pages/auth/view/cubit/send_reset_code_cubit.dart';
 import 'package:dev_note/pages/auth/view/widget/shared/auth_info_message.dart';

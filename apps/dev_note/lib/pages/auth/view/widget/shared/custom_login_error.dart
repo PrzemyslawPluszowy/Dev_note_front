@@ -1,9 +1,7 @@
-import 'package:dev_note/core/extensions/context_color.dart';
-import 'package:dev_note/core/extensions/context_text_theme.dart';
 import 'package:dev_note/core/extensions/translation_api_exception.dart';
-import 'package:dev_note/core/theme/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomLoginError extends StatelessWidget {

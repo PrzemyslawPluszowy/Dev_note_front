@@ -1,7 +1,7 @@
 import 'package:dev_note/core/shared/widgets/gradient_box_border.dart';
-import 'package:dev_note/core/theme/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:p_utils/p_utils.dart';
 
 class GlassContainer extends StatelessWidget {
   const GlassContainer({required this.child, super.key});

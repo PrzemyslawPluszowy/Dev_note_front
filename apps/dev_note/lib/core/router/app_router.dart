@@ -57,7 +57,7 @@ class AppRouter extends RootStackRouter {
       if (isAuthenticated) {
         if (isGuestRoute) {
           // Zalogowany użytkownik próbuje wejść na stronę auth -> przekieruj na główną
-          await router.navigate(const Board());
+          await router.navigate(const Rail_navigation());
           resolver.next(false);
         } else {
           // Zalogowany użytkownik na stronie dla zalogowanych -> pozwól
@@ -123,17 +123,10 @@ class AppRouter extends RootStackRouter {
       ],
     ),
     // Strony dla zalogowanych użytkowników na głównym poziomie
-    CustomRoute<Board>(
-      page: Board.page,
+    CustomRoute<Rail_navigation>(
+      page: Rail_navigation.page,
       path: '/',
       initial: true,
-      maintainState: false,
-      allowSnapshotting: false,
-      customRouteBuilder: _createFadeInRoute,
-    ),
-    CustomRoute<Test>(
-      page: Test.page,
-      path: '/test',
       maintainState: false,
       allowSnapshotting: false,
       customRouteBuilder: _createFadeInRoute,

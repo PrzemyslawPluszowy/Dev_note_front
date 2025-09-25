@@ -1,6 +1,6 @@
-import 'package:dev_note/core/theme/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class AuthInfoMessage extends StatelessWidget {
