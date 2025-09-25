@@ -21,5 +21,6 @@ void setupDi() {
     )
     ..registerSingleton<AuthRepository>(AuthRepository(getIt<DioClient>().dio))
     ..registerSingleton<UserRepository>(UserRepository(getIt<DioClient>().dio))
-    ..registerSingleton<WorkspacesRepository>(WorkspacesRepository(getIt<DioClient>().dio));
+    ..registerSingleton<WorkspacesRepository>(WorkspacesRepository(getIt<DioClient>().dio))
+    ..registerSingleton<ProjectsRepository>(ProjectsRepository(getIt<DioClient>().dio));
 }

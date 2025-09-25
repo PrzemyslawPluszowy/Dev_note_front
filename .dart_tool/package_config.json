@@ -345,7 +345,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter/packages/flutter",
+      "rootUri": "file:///Users/Shared/flutter_sdk/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
@@ -387,7 +387,7 @@
     },
     {
       "name": "flutter_localizations",
-      "rootUri": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter/packages/flutter_localizations",
+      "rootUri": "file:///Users/Shared/flutter_sdk/flutter/packages/flutter_localizations",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
@@ -405,13 +405,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/Shared/flutter_sdk/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/Shared/flutter_sdk/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
@@ -927,7 +927,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/Shared/flutter_sdk/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
@@ -1174,7 +1174,7 @@
   ],
   "generator": "pub",
   "generatorVersion": "3.9.2",
-  "flutterRoot": "file:///Users/przemyslawnowak/Desktop/dev/flutter/flutter",
+  "flutterRoot": "file:///Users/Shared/flutter_sdk/flutter",
   "flutterVersion": "3.35.3",
   "pubCache": "file:///Users/przemyslawnowak/.pub-cache"
 }
