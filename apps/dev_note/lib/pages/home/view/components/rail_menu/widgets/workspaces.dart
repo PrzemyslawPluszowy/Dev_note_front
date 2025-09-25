@@ -1,5 +1,4 @@
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -48,51 +47,96 @@ class Workspaces extends HookWidget {
               context.read<WorkspacesMenuCubit>().reorderWorkspaces(oldIndex: oldIndex, newIndex: newIndex);
             },
             proxyDecorator: (child, index, animation) {
-              return child; // Hide drag handles by returning child without decoration
+              return child; // keep default look while dragging
             },
             itemBuilder: (context, index) {
               final workspace = workspaces[index];
               return ReorderableDragStartListener(
                 index: index,
                 key: ValueKey('workspace_${workspace.id}'),
-                child: _ExpandableNode(
-                  id: 'ws:${workspace.id}',
-                  leading: _GradientIconBadge(
-                    colors: [
-                      workspace.primaryColor.toFlutterColor(),
-                      workspace.primaryColor.toFlutterColor().withAlpha(150),
-                    ],
-                    icon: PhosphorIcon(workspace.icon.icon, size: Sizes.p20, color: Colors.white),
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: Sizes.p2),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizes.p8),
+                    side: BorderSide(color: context.colorScheme.outlineVariant.withAlpha(60)),
                   ),
-                  title: Text(
-                    workspace.name,
-                    style: context.textTheme.bodyLarge,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  expanded: isExpanded('ws:${workspace.id}'),
-                  onToggle: () => toggleExpanded('ws:${workspace.id}'),
-                  children: [
-                    _ProjectsList(
-                      workspace: workspace,
-                      expandedSet: expanded.value,
-                      toggleExpanded: toggleExpanded,
-                      onReorderProjects: (oldIndex, newIndex) {
-                        context.read<WorkspacesMenuCubit>().reorderProjects(
-                          workspaceId: workspace.id,
-                          oldIndex: oldIndex,
-                          newIndex: newIndex,
-                        );
-                      },
-                      onReorderBoards: (projectId, oldIndex, newIndex) {
-                        context.read<WorkspacesMenuCubit>().reorderBoards(
-                          workspaceId: workspace.id,
-                          projectId: projectId,
-                          oldIndex: oldIndex,
-                          newIndex: newIndex,
-                        );
-                      },
+                  child: Theme(
+                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      visualDensity: VisualDensity.compact,
+                      initiallyExpanded: isExpanded('ws:${workspace.id}'),
+                      onExpansionChanged: (_) => toggleExpanded('ws:${workspace.id}'),
+                      tilePadding: const EdgeInsets.symmetric(
+                        horizontal: Sizes.p8,
+                      ),
+                      leading: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: workspace.primaryColor.toFlutterColor(),
+                        child: Icon(workspace.icon.icon, size: Sizes.p12, color: Colors.white),
+                      ),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              workspace.name,
+                              style: context.textTheme.bodyLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Tooltip(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withAlpha(150),
+                              borderRadius: BorderRadius.circular(Sizes.p4),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 4,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            message: 'Edit workspace',
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                // TODO(dev-note): Handle workspace settings via navigation/cubit.
+                              },
+                              icon: PhosphorIcon(
+                                PhosphorIcons.list(),
+                                size: Sizes.p16,
+                                color: context.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.fromLTRB(Sizes.p12, 0, Sizes.p12, 0),
+                      children: [
+                        if (workspace.projects.isNotEmpty) _SectionLabel(label: 'Projekty', onAddPressed: () {}),
+                        _ProjectsList(
+                          workspace: workspace,
+                          expandedSet: expanded.value,
+                          toggleExpanded: toggleExpanded,
+                          onReorderProjects: (oldIndex, newIndex) {
+                            context.read<WorkspacesMenuCubit>().reorderProjects(
+                              workspaceId: workspace.id,
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                          },
+                          onReorderBoards: (projectId, oldIndex, newIndex) {
+                            context.read<WorkspacesMenuCubit>().reorderBoards(
+                              workspaceId: workspace.id,
+                              projectId: projectId,
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },
@@ -128,44 +172,42 @@ class _ProjectsList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: workspace.projects.length,
       onReorder: onReorderProjects,
-      proxyDecorator: (child, index, animation) => Material(
-        color: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(Sizes.p8),
-          decoration: BoxDecoration(
-            border: Border.all(color: context.colorScheme.outline),
-            borderRadius: BorderRadius.circular(Sizes.p4),
-          ),
-          child: child,
-        ), // Hide drag handles by returning child without decoration
-      ),
-
+      proxyDecorator: (child, index, animation) => child,
       itemBuilder: (context, index) {
         final project = workspace.projects[index];
         return ReorderableDragStartListener(
           index: index,
           key: ValueKey('project_${project.id}'),
-          child: _ExpandableNode(
-            id: 'pr:${project.id}',
-            leading: _GradientIconBadge(
-              colors: [
-                workspace.primaryColor.toFlutterColor(),
-                workspace.primaryColor.toFlutterColor().withAlpha(180),
-              ],
-              icon: PhosphorIcon(project.icon.icon, size: Sizes.p20, color: Colors.white),
-            ),
-            title: Text(
-              project.name,
-              style: context.textTheme.bodyLarge,
-            ),
-            expanded: expandedSet.contains('pr:${project.id}'),
-            onToggle: () => toggleExpanded('pr:${project.id}'),
-            children: [
-              _BoardsList(
-                project: project,
-                onReorder: (oldIndex, newIndex) => onReorderBoards(project.id, oldIndex, newIndex),
+          child: Padding(
+            padding: EdgeInsets.zero,
+            child: Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                dense: true,
+                initiallyExpanded: expandedSet.contains('pr:${project.id}'),
+                onExpansionChanged: (_) => toggleExpanded('pr:${project.id}'),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.p8)),
+                tilePadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
+                leading: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: workspace.primaryColor.toFlutterColor(),
+                  child: Icon(project.icon.icon, size: Sizes.p12, color: Colors.white),
+                ),
+                title: Text(
+                  project.name,
+                  style: context.textTheme.bodyLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                childrenPadding: const EdgeInsets.only(left: Sizes.p8),
+                children: [
+                  if (project.boards.isNotEmpty) _SectionLabel(label: 'Boardy', onAddPressed: () {}),
+                  _BoardsList(
+                    project: project,
+                    onReorder: (oldIndex, newIndex) => onReorderBoards(project.id, oldIndex, newIndex),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -193,58 +235,33 @@ class _BoardsList extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: project.boards.length,
-
       onReorder: onReorder,
-      proxyDecorator: (child, index, animation) {
-        return child; // Hide drag handles by returning child without decoration
-      },
+      proxyDecorator: (child, index, animation) => child,
       itemBuilder: (context, index) {
         final board = project.boards[index];
-        return ReorderableDragStartListener(
+        return Material(
           key: ValueKey('board_${board.id}'),
-          index: index,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
+          color: Colors.transparent,
+          child: ReorderableDragStartListener(
+            key: ValueKey('board_${board.id}'),
+            index: index,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
+              dense: true,
+              visualDensity: VisualDensity.compact,
+              leading: CircleAvatar(
+                radius: 10,
+                backgroundColor: context.colorScheme.primary,
+                child: Icon(PhosphorIcons.database(), size: Sizes.p12, color: Colors.white),
+              ),
+              title: Text(
+                board.name,
+                style: context.textTheme.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: () {
                 // TODO(dev-note): Handle board selection via navigation/cubit.
               },
-              borderRadius: BorderRadius.circular(Sizes.p4),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      context.colorScheme.surface.withValues(alpha: 0.9),
-                      context.colorScheme.surface.withValues(alpha: 0.7),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(Sizes.p4),
-                ),
-                child: Row(
-                  children: [
-                    // Board icon with colored background
-                    _GradientIconBadge(
-                      colors: [
-                        context.colorScheme.primary,
-                        context.colorScheme.primary.withAlpha(180),
-                      ],
-                      icon: PhosphorIcon(
-                        PhosphorIcons.database(),
-                        size: Sizes.p20,
-                        color: Colors.white,
-                      ),
-                    ),
-                    gapW12,
-                    // Board name
-                    Expanded(
-                      child: Text(board.name, style: context.textTheme.bodyLarge),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ),
         );
@@ -253,111 +270,34 @@ class _BoardsList extends StatelessWidget {
   }
 }
 
-class _ExpandableNode extends StatelessWidget {
-  const _ExpandableNode({
-    required this.id,
-    required this.leading,
-    required this.title,
-    required this.expanded,
-    required this.onToggle,
-    this.children = const <Widget>[],
-  });
+// Previous custom widgets (_ExpandableNode, _GradientIconBadge) were removed in favor of Material widgets.
 
-  final String id;
-  final Widget leading;
-  final Widget title;
-  final bool expanded;
-  final VoidCallback onToggle;
-  final List<Widget> children;
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.label, required this.onAddPressed});
+
+  final String label;
+  final void Function() onAddPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onToggle,
-            borderRadius: BorderRadius.circular(Sizes.p4),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: Sizes.p4, horizontal: Sizes.p4),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    context.colorScheme.surface.withValues(alpha: 0.9),
-                    context.colorScheme.surface.withValues(alpha: 0.7),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(Sizes.p4),
-              ),
-              child: Row(
-                children: [
-                  // Expansion arrow
-                  AnimatedRotation(
-                    turns: expanded ? 0.25 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(Icons.chevron_right, size: 16, color: context.colorScheme.primary),
-                  ),
-                  gapW4,
-                  // Leading icon
-                  leading,
-                  gapW4,
-                  // Title
-                  Expanded(child: title),
-                ],
-              ),
-            ),
+        Text(
+          label,
+          style: context.textTheme.labelMedium?.copyWith(
+            color: context.colorScheme.outline,
+            letterSpacing: 0.5,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        AnimatedCrossFade(
-          firstChild: const SizedBox.shrink(),
-          secondChild: Padding(
-            padding: const EdgeInsets.only(left: Sizes.p16, top: Sizes.p4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children,
-            ),
-          ),
-
-          crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-          duration: const Duration(milliseconds: 200),
-          sizeCurve: Curves.easeInOut,
+        const Spacer(),
+        IconButton(
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(minHeight: 24, minWidth: 24),
+          onPressed: onAddPressed,
+          icon: PhosphorIcon(PhosphorIcons.plus(), size: Sizes.p16),
         ),
-        gapH8,
       ],
-    );
-  }
-}
-
-/// A small rounded gradient badge that contains an icon.
-class _GradientIconBadge extends StatelessWidget {
-  const _GradientIconBadge({
-    required this.colors,
-    required this.icon,
-  });
-
-  final List<Color> colors;
-  final Widget icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Sizes.p2),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: colors,
-        ),
-        borderRadius: BorderRadius.circular(Sizes.p2),
-        border: Border.all(
-          color: colors.first.darken(),
-        ),
-      ),
-      child: icon,
     );
   }
 }
