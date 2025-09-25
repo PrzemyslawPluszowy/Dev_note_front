@@ -1,4 +1,5 @@
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -6,6 +7,11 @@ import 'package:p_repositories/repositories.dart';
 import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+/// Hierarchical, reorderable list of Workspaces → Projects → Boards.
+///
+/// This widget renders three nested reorderable lists with lightweight
+/// expansion state kept locally for UX responsiveness. It uses small, focused
+/// sub-widgets for readability and performance.
 class Workspaces extends HookWidget {
   const Workspaces({super.key});
 
@@ -24,8 +30,8 @@ class Workspaces extends HookWidget {
       expanded.value = set;
     }
 
-    return BlocConsumer<WorkspacesMenuCubit, WorkspacesMenuState>(
-      listener: (context, state) {},
+    // No side-effects are handled here, so BlocBuilder is sufficient.
+    return BlocBuilder<WorkspacesMenuCubit, WorkspacesMenuState>(
       builder: (context, state) {
         final workspaces = switch (state) {
           WorkspacesMenuSuccess(:final workspaces) => workspaces,
@@ -50,22 +56,13 @@ class Workspaces extends HookWidget {
                 index: index,
                 key: ValueKey('workspace_${workspace.id}'),
                 child: _ExpandableNode(
-                  key: ValueKey('workspace_${workspace.id}'),
                   id: 'ws:${workspace.id}',
-                  leading: Container(
-                    padding: const EdgeInsets.all(Sizes.p2),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          workspace.primaryColor.toFlutterColor(),
-                          workspace.primaryColor.toFlutterColor().withAlpha(150),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(Sizes.p2),
-                    ),
-                    child: PhosphorIcon(workspace.icon.icon, size: Sizes.p20, color: Colors.white),
+                  leading: _GradientIconBadge(
+                    colors: [
+                      workspace.primaryColor.toFlutterColor(),
+                      workspace.primaryColor.toFlutterColor().withAlpha(150),
+                    ],
+                    icon: PhosphorIcon(workspace.icon.icon, size: Sizes.p20, color: Colors.white),
                   ),
                   title: Text(
                     workspace.name,
@@ -150,20 +147,12 @@ class _ProjectsList extends StatelessWidget {
           key: ValueKey('project_${project.id}'),
           child: _ExpandableNode(
             id: 'pr:${project.id}',
-            leading: Container(
-              padding: const EdgeInsets.all(Sizes.p2),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    workspace.primaryColor.toFlutterColor(),
-                    workspace.primaryColor.toFlutterColor().withAlpha(180),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(Sizes.p2),
-              ),
-              child: PhosphorIcon(project.icon.icon, size: Sizes.p20, color: Colors.white),
+            leading: _GradientIconBadge(
+              colors: [
+                workspace.primaryColor.toFlutterColor(),
+                workspace.primaryColor.toFlutterColor().withAlpha(180),
+              ],
+              icon: PhosphorIcon(project.icon.icon, size: Sizes.p20, color: Colors.white),
             ),
             title: Text(
               project.name,
@@ -218,7 +207,7 @@ class _BoardsList extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                // Handle board selection
+                // TODO(dev-note): Handle board selection via navigation/cubit.
               },
               borderRadius: BorderRadius.circular(Sizes.p4),
               child: Container(
@@ -237,20 +226,12 @@ class _BoardsList extends StatelessWidget {
                 child: Row(
                   children: [
                     // Board icon with colored background
-                    Container(
-                      padding: const EdgeInsets.all(Sizes.p2),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            context.colorScheme.primary,
-                            context.colorScheme.primary.withAlpha(180),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(Sizes.p2),
-                      ),
-                      child: PhosphorIcon(
+                    _GradientIconBadge(
+                      colors: [
+                        context.colorScheme.primary,
+                        context.colorScheme.primary.withAlpha(180),
+                      ],
+                      icon: PhosphorIcon(
                         PhosphorIcons.database(),
                         size: Sizes.p20,
                         color: Colors.white,
@@ -279,7 +260,6 @@ class _ExpandableNode extends StatelessWidget {
     required this.title,
     required this.expanded,
     required this.onToggle,
-    super.key,
     this.children = const <Widget>[],
   });
 
@@ -341,12 +321,43 @@ class _ExpandableNode extends StatelessWidget {
               children: children,
             ),
           ),
+
           crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 200),
           sizeCurve: Curves.easeInOut,
         ),
         gapH8,
       ],
+    );
+  }
+}
+
+/// A small rounded gradient badge that contains an icon.
+class _GradientIconBadge extends StatelessWidget {
+  const _GradientIconBadge({
+    required this.colors,
+    required this.icon,
+  });
+
+  final List<Color> colors;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Sizes.p2),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        ),
+        borderRadius: BorderRadius.circular(Sizes.p2),
+        border: Border.all(
+          color: colors.first.darken(),
+        ),
+      ),
+      child: icon,
     );
   }
 }
