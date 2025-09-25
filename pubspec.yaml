@@ -11,6 +11,7 @@ workspace:
   - packages/p_models
   - packages/p_repositories
   - packages/p_utils
+  - packages/p_shared_ui
 
 melos:
   scripts:

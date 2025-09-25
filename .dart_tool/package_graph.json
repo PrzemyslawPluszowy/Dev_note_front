@@ -4,6 +4,7 @@
     "devnotedekstop",
     "p_models",
     "p_repositories",
+    "p_shared_ui",
     "p_utils"
   ],
   "packages": [
@@ -43,6 +44,7 @@
         "json_annotation",
         "p_models",
         "p_repositories",
+        "p_shared_ui",
         "p_utils",
         "path_provider",
         "phosphor_flutter",
@@ -70,7 +72,8 @@
       "dependencies": [
         "flutter",
         "freezed_annotation",
-        "json_annotation"
+        "json_annotation",
+        "phosphor_flutter"
       ],
       "devDependencies": [
         "build_runner",
@@ -117,6 +120,21 @@
         "flutter_lints",
         "flutter_test",
         "mocktail"
+      ]
+    },
+    {
+      "name": "p_shared_ui",
+      "version": "0.0.1",
+      "dependencies": [
+        "flutter",
+        "flutter_hooks",
+        "p_models",
+        "p_utils",
+        "phosphor_flutter"
+      ],
+      "devDependencies": [
+        "flutter_lints",
+        "flutter_test"
       ]
     },
     {
@@ -600,12 +618,10 @@
       "dependencies": []
     },
     {
-      "name": "mocktail",
-      "version": "1.0.4",
+      "name": "flutter_lints",
+      "version": "6.0.0",
       "dependencies": [
-        "collection",
-        "matcher",
-        "test_api"
+        "lints"
       ]
     },
     {
@@ -627,22 +643,15 @@
       ]
     },
     {
-      "name": "flutter_lints",
-      "version": "6.0.0",
-      "dependencies": [
-        "lints"
-      ]
-    },
-    {
-      "name": "talker",
-      "version": "5.0.0",
-      "dependencies": [
-        "talker_logger"
-      ]
-    },
-    {
       "name": "flutter_hooks",
       "version": "0.21.3+1",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "phosphor_flutter",
+      "version": "2.1.0",
       "dependencies": [
         "flutter"
       ]
@@ -657,6 +666,22 @@
         "meta",
         "sky_engine",
         "vector_math"
+      ]
+    },
+    {
+      "name": "mocktail",
+      "version": "1.0.4",
+      "dependencies": [
+        "collection",
+        "matcher",
+        "test_api"
+      ]
+    },
+    {
+      "name": "talker",
+      "version": "5.0.0",
+      "dependencies": [
+        "talker_logger"
       ]
     },
     {
@@ -772,13 +797,6 @@
         "flutter",
         "flutter_localizations",
         "intl"
-      ]
-    },
-    {
-      "name": "phosphor_flutter",
-      "version": "2.1.0",
-      "dependencies": [
-        "flutter"
       ]
     },
     {
@@ -1077,19 +1095,9 @@
       ]
     },
     {
-      "name": "test_api",
-      "version": "0.7.6",
-      "dependencies": [
-        "async",
-        "boolean_selector",
-        "collection",
-        "meta",
-        "source_span",
-        "stack_trace",
-        "stream_channel",
-        "string_scanner",
-        "term_glyph"
-      ]
+      "name": "lints",
+      "version": "6.0.0",
+      "dependencies": []
     },
     {
       "name": "leak_tracker_flutter_testing",
@@ -1121,16 +1129,18 @@
       ]
     },
     {
-      "name": "lints",
-      "version": "6.0.0",
-      "dependencies": []
-    },
-    {
-      "name": "talker_logger",
-      "version": "5.0.0",
+      "name": "test_api",
+      "version": "0.7.6",
       "dependencies": [
-        "ansicolor",
-        "web"
+        "async",
+        "boolean_selector",
+        "collection",
+        "meta",
+        "source_span",
+        "stack_trace",
+        "stream_channel",
+        "string_scanner",
+        "term_glyph"
       ]
     },
     {
@@ -1149,6 +1159,14 @@
       "name": "characters",
       "version": "1.4.0",
       "dependencies": []
+    },
+    {
+      "name": "talker_logger",
+      "version": "5.0.0",
+      "dependencies": [
+        "ansicolor",
+        "web"
+      ]
     },
     {
       "name": "isolate_channel",
@@ -1438,14 +1456,6 @@
       "dependencies": []
     },
     {
-      "name": "boolean_selector",
-      "version": "2.1.2",
-      "dependencies": [
-        "source_span",
-        "string_scanner"
-      ]
-    },
-    {
       "name": "leak_tracker_testing",
       "version": "3.0.2",
       "dependencies": [
@@ -1463,6 +1473,14 @@
         "meta",
         "path",
         "vm_service"
+      ]
+    },
+    {
+      "name": "boolean_selector",
+      "version": "2.1.2",
+      "dependencies": [
+        "source_span",
+        "string_scanner"
       ]
     },
     {
