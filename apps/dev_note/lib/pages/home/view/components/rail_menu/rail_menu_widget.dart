@@ -55,6 +55,7 @@ class _WorkspacesLabel extends StatelessWidget {
         // Dodaj workspace
         CustomPopup(
           width: 500,
+
           content: (closePopup) => BlocProvider.value(
             value: context.read<WorkspacesMenuCubit>(),
             child: AddWorkSpaceDialog(closePopup: closePopup),

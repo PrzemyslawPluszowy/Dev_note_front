@@ -99,7 +99,7 @@
         "name": "Nazwa obszaru roboczego",
         "description": "Opis",
         "descriptionHint": "Opis (opcjonalny)",
-        "nameHint": "Np. Mój nowy projekt",
+        "nameHint": "Np. Mój nowy workspace",
         "color": "Kolor",
         "icon": "Ikona",
         "created": "Utworzony",

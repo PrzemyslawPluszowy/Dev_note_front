@@ -1,8 +1,12 @@
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_board_dialog.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_project_dialog.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_workspace_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:p_repositories/repositories.dart';
+import 'package:p_shared_ui/p_shared_ui.dart';
 import 'package:p_utils/p_utils.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -84,36 +88,71 @@ class Workspaces extends HookWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Tooltip(
-                            decoration: BoxDecoration(
-                              color: Colors.black.withAlpha(150),
-                              borderRadius: BorderRadius.circular(Sizes.p4),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 4,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
-                            ),
-                            message: 'Edit workspace',
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                // TODO(dev-note): Handle workspace settings via navigation/cubit.
-                              },
-                              icon: PhosphorIcon(
-                                PhosphorIcons.list(),
-                                size: Sizes.p16,
-                                color: context.colorScheme.primary,
+                          CustomMenuPopup(
+                            menus: [
+                              CustomMenuOverlay(
+                                title: 'Edytuj workspace',
+                                icon: Icons.edit_outlined,
+                                noodle: (context, animationStatus, close) => const EditWorkspaceWidget(),
                               ),
-                            ),
+                              CustomMenuOverlay(
+                                title: 'Usuń workspace',
+                                icon: Icons.delete_outline,
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Usuń workspace'),
+                                        content: Text(
+                                          'Czy na pewno chcesz usunąć workspace "${workspace.name}"? '
+                                          'Operacji tej nie można cofnąć.',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: const Text('Anuluj'),
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Usuń'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
                       childrenPadding: const EdgeInsets.fromLTRB(Sizes.p12, 0, Sizes.p12, 0),
                       children: [
-                        if (workspace.projects.isNotEmpty) _SectionLabel(label: 'Projekty', onAddPressed: () {}),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const _SectionLabel(label: 'Projekty'),
+                            CustomPopup(
+                              key: ValueKey('add_project_to_${workspace.id}'),
+                              width: 500,
+                              content: (closePopup) {
+                                return BlocProvider.value(
+                                  value: context.read<WorkspacesMenuCubit>(),
+                                  child: AddProjectDialog(closePopup: closePopup, workspaceId: workspace.id),
+                                );
+                              },
+                              icon: PhosphorIcons.plus(),
+                              iconSize: Sizes.p20,
+                              iconColor: context.colorScheme.primary,
+                            ),
+                          ],
+                        ),
                         _ProjectsList(
                           workspace: workspace,
                           expandedSet: expanded.value,
@@ -190,8 +229,8 @@ class _ProjectsList extends StatelessWidget {
                 tilePadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
                 leading: CircleAvatar(
                   radius: 10,
-                  backgroundColor: workspace.primaryColor.toFlutterColor(),
-                  child: Icon(project.icon.icon, size: Sizes.p12, color: Colors.white),
+                  backgroundColor: project.primaryColor.toFlutterColor(),
+                  child: PhosphorIcon(project.icon.icon, size: Sizes.p12, color: Colors.white),
                 ),
                 title: Text(
                   project.name,
@@ -200,7 +239,27 @@ class _ProjectsList extends StatelessWidget {
                 ),
                 childrenPadding: const EdgeInsets.only(left: Sizes.p8),
                 children: [
-                  if (project.boards.isNotEmpty) _SectionLabel(label: 'Boardy', onAddPressed: () {}),
+                  Row(
+                    children: [
+                      const _SectionLabel(label: 'Boardy'),
+                      const Spacer(),
+                      CustomPopup(
+                        width: 400,
+                        content: (closePopup) => BlocProvider.value(
+                          value: context.read<WorkspacesMenuCubit>(),
+                          child: AddBoardDialog(
+                            closePopup: closePopup,
+                            workspaceId: workspace.id,
+                            projectId: project.id,
+                          ),
+                        ),
+                        icon: PhosphorIcons.plus(),
+                        iconSize: Sizes.p16,
+                        iconColor: context.colorScheme.primary,
+                        key: ValueKey('add_board_to_${project.id}'),
+                      ),
+                    ],
+                  ),
                   _BoardsList(
                     project: project,
                     onReorder: (oldIndex, newIndex) => onReorderBoards(project.id, oldIndex, newIndex),
@@ -273,10 +332,9 @@ class _BoardsList extends StatelessWidget {
 // Previous custom widgets (_ExpandableNode, _GradientIconBadge) were removed in favor of Material widgets.
 
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.label, required this.onAddPressed});
+  const _SectionLabel({required this.label});
 
   final String label;
-  final void Function() onAddPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -289,13 +347,6 @@ class _SectionLabel extends StatelessWidget {
             letterSpacing: 0.5,
             fontWeight: FontWeight.w600,
           ),
-        ),
-        const Spacer(),
-        IconButton(
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(minHeight: 24, minWidth: 24),
-          onPressed: onAddPressed,
-          icon: PhosphorIcon(PhosphorIcons.plus(), size: Sizes.p16),
         ),
       ],
     );

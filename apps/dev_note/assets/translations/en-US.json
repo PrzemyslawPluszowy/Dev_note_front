@@ -99,7 +99,7 @@
         "name": "Workspace name",
         "description": "Description",
         "descriptionHint": "Description (optional)",
-        "nameHint": "E.g. My new project",
+        "nameHint": "E.g. My new workspace",
         "color": "Color",
         "icon": "Icon",
         "created": "Created",
