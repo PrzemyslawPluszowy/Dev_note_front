@@ -92,12 +92,13 @@ class Workspaces extends HookWidget {
                             menus: [
                               CustomMenuOverlay(
                                 title: 'Edytuj workspace',
-                                icon: Icons.edit_outlined,
-                                noodle: (context, animationStatus, close) => const EditWorkspaceWidget(),
+                                icon: PhosphorIcons.pencil(),
+                                noodle: (context, animationStatus, close) => EditWorkspaceWidget(workspace: workspace),
                               ),
                               CustomMenuOverlay(
                                 title: 'Usuń workspace',
-                                icon: Icons.delete_outline,
+                                icon: PhosphorIcons.trash(),
+                                iconColor: Colors.red,
                                 onTap: () {
                                   showDialog(
                                     context: context,

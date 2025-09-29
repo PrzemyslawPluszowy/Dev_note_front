@@ -22,6 +22,7 @@ class CustomColorSelector extends HookWidget {
     this.crossAxisCount = 11,
     this.crossAxisSpacing = 4,
     this.mainAxisSpacing = 4,
+    this.initialColor,
   });
 
   /// Odstęp poziomy między elementami siatki.
@@ -36,9 +37,12 @@ class CustomColorSelector extends HookWidget {
   /// Callback wywoływany po wyborze koloru. Otrzymuje wybrany [ApiColorScheme].
   final void Function(ApiColorScheme) onColorSelected;
 
+  // initial color
+  final ApiColorScheme? initialColor;
+
   @override
   Widget build(BuildContext context) {
-    final selectedColor = useState<ApiColorScheme?>(null);
+    final selectedColor = useState<ApiColorScheme?>(initialColor);
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

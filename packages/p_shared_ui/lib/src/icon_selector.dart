@@ -15,6 +15,7 @@ class IconSelector extends HookWidget {
     this.crossAxisSpacing,
     this.mainAxisSpacing,
     this.crossAxisCount,
+    this.initialIcon,
   });
 
   ///Callback funkcja w momencie wybrania ikony
@@ -22,10 +23,11 @@ class IconSelector extends HookWidget {
   final double? crossAxisSpacing;
   final double? mainAxisSpacing;
   final int? crossAxisCount;
+  final ApiPhosphorIcons? initialIcon;
 
   @override
   Widget build(BuildContext context) {
-    final selectedIcon = useState<ApiPhosphorIcons?>(null);
+    final selectedIcon = useState<ApiPhosphorIcons?>(initialIcon);
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
