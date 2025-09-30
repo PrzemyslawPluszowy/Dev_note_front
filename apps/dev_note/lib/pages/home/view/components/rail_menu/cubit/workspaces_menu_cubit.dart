@@ -11,17 +11,19 @@ class WorkspacesMenuCubit extends Cubit<WorkspacesMenuState> {
   WorkspacesMenuCubit({
     required this.workspacesRepository,
   }) : super(const WorkspacesMenuLoading()) {
-    unawaited(fetchWorkspaces());
+    unawaited(fetchWorkspaces(showLoading: true));
   }
 
   final WorkspacesRepository workspacesRepository;
 
-  Future<void> fetchWorkspaces() async {
-    emit(
-      WorkspacesMenuLoading(
-        oldStateWorkspaces: state is WorkspacesMenuSuccess ? (state as WorkspacesMenuSuccess).workspaces : [],
-      ),
-    );
+  Future<void> fetchWorkspaces({required bool showLoading}) async {
+    if (showLoading) {
+      emit(
+        WorkspacesMenuLoading(
+          oldStateWorkspaces: state is WorkspacesMenuSuccess ? (state as WorkspacesMenuSuccess).workspaces : [],
+        ),
+      );
+    }
     try {
       final workspaces = await SafeApiCall.call(
         workspacesRepository.getWorkspaces,

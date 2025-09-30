@@ -70,7 +70,7 @@ class _WorkspacesLabel extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.zero,
           onPressed: () async {
-            await context.read<WorkspacesMenuCubit>().fetchWorkspaces();
+            await context.read<WorkspacesMenuCubit>().fetchWorkspaces(showLoading: true);
           },
           icon: PhosphorIcon(
             PhosphorIcons.arrowClockwise(),

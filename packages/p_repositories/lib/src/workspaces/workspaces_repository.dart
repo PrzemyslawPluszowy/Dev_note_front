@@ -19,4 +19,17 @@ abstract class WorkspacesRepository {
   Future<WorkspacesModel> createWorkspace(
     @Body() CreateWorkspaceModel createWorkspaceModel,
   );
+
+  /// Edycja workspace'a
+  @PATCH('/workspaces/{workspaceId}/edit')
+  Future<WorkspacesModel> editWorkspace(
+    @Path('workspaceId') String workspaceId,
+    @Body() CreateWorkspaceModel editWorkspaceModel,
+  );
+
+  /// Usunięcie workspace'a
+  @DELETE('/workspaces/{workspaceId}')
+  Future<MessageResponse> deleteWorkspace(
+    @Path('workspaceId') String workspaceId,
+  );
 }

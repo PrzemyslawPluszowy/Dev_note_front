@@ -9,6 +9,7 @@ export 'package:p_models/src/auth/reset_password_code_request.dart';
 export 'package:p_models/src/auth/reset_password_request.dart';
 export 'package:p_models/src/board/board_create_request.dart';
 export 'package:p_models/src/projects/create_project_request.dart';
+export 'package:p_models/src/projects/edit_project_request.dart';
 export 'package:p_models/src/shared/bad_response.dart';
 export 'package:p_models/src/shared/enums/colors.dart';
 export 'package:p_models/src/shared/enums/icons.dart';

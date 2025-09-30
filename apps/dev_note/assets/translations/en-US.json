@@ -109,6 +109,19 @@
         "noWorkspaces": "No workspaces",
         "createFirstWorkspace": "Create your first workspace"
     },
+    "messages": {
+        "workspaceUpdated": "Workspace \"{name}\" has been updated",
+        "projectUpdated": "Project \"{name}\" has been updated",
+        "boardAdded": "Board has been added",
+        "workspaceAdded": "Workspace has been added",
+        "workspaceDeleteTitle": "Delete workspace",
+        "workspaceDeleteConfirm": "Are you sure you want to delete workspace \"{name}\"? This operation cannot be undone.",
+        "workspaceDeleted": "Workspace has been deleted"
+    },
+    "labels": {
+        "boards": "Boards",
+        "projects": "Projects"
+    },
     "project": {
         "title": "Projects",
         "createNew": "Create new project",

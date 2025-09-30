@@ -1,7 +1,11 @@
+import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_board_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_project_dialog.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/delete_works_pace_dialog.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_project_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_workspace_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -91,39 +95,22 @@ class Workspaces extends HookWidget {
                           CustomMenuPopup(
                             menus: [
                               CustomMenuOverlay(
-                                title: 'Edytuj workspace',
+                                title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.workspace_title.tr()}',
                                 icon: PhosphorIcons.pencil(),
-                                noodle: (context, animationStatus, close) => EditWorkspaceWidget(workspace: workspace),
+                                noodle: (context, animationStatus, close) =>
+                                    EditWorkspaceWidget(workspace: workspace, closeCallback: close),
                               ),
                               CustomMenuOverlay(
-                                title: 'Usuń workspace',
+                                title: LocaleKeys.messages_workspaceDeleteTitle.tr(),
                                 icon: PhosphorIcons.trash(),
                                 iconColor: Colors.red,
-                                onTap: () {
-                                  showDialog(
+                                onTap: () async {
+                                  await showDialog<void>(
                                     context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Usuń workspace'),
-                                        content: Text(
-                                          'Czy na pewno chcesz usunąć workspace "${workspace.name}"? '
-                                          'Operacji tej nie można cofnąć.',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(),
-                                            child: const Text('Anuluj'),
-                                          ),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Usuń'),
-                                          ),
-                                        ],
+                                    builder: (_) {
+                                      return BlocProvider.value(
+                                        value: context.read<WorkspacesMenuCubit>(),
+                                        child: DeleteWorksPaceDialog(workspace: workspace),
                                       );
                                     },
                                   );
@@ -138,7 +125,7 @@ class Workspaces extends HookWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const _SectionLabel(label: 'Projekty'),
+                            _SectionLabel(label: LocaleKeys.labels_projects.tr()),
                             CustomPopup(
                               key: ValueKey('add_project_to_${workspace.id}'),
                               width: 500,
@@ -233,16 +220,42 @@ class _ProjectsList extends StatelessWidget {
                   backgroundColor: project.primaryColor.toFlutterColor(),
                   child: PhosphorIcon(project.icon.icon, size: Sizes.p12, color: Colors.white),
                 ),
-                title: Text(
-                  project.name,
-                  style: context.textTheme.bodyLarge,
-                  overflow: TextOverflow.ellipsis,
+                title: Row(
+                  children: [
+                    Text(
+                      project.name,
+                      style: context.textTheme.bodyLarge,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    CustomMenuPopup(
+                      menus: [
+                        CustomMenuOverlay(
+                          title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.project_title.tr()}',
+                          icon: PhosphorIcons.pencil(),
+                          noodle: (context, animationStatus, close) => EditProjectDialog(
+                            projectModel: project,
+                            workspaceId: workspace.id,
+                            closeCallback: close,
+                          ),
+                        ),
+                        CustomMenuOverlay(
+                          title: '${LocaleKeys.common_delete.tr()} ${LocaleKeys.project_title.tr()}',
+                          icon: PhosphorIcons.trash(),
+                          iconColor: Colors.red,
+                          onTap: () {
+                            // TODO(dev-note): Implement project deletion.
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 childrenPadding: const EdgeInsets.only(left: Sizes.p8),
                 children: [
                   Row(
                     children: [
-                      const _SectionLabel(label: 'Boardy'),
+                      _SectionLabel(label: LocaleKeys.labels_boards.tr()),
                       const Spacer(),
                       CustomPopup(
                         width: 400,

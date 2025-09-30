@@ -1,9 +1,11 @@
+import 'package:dev_note/core/extensions/translation_api_exception.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/add_workspace_cubit.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:p_repositories/repositories.dart';
@@ -90,8 +92,37 @@ class AddWorkSpaceDialog extends HookWidget {
                     child: Text(LocaleKeys.common_cancel.tr()),
                   ),
                   gapW8,
-                  BlocBuilder<AddWorkspaceCubit, AddWorkspaceState>(
+                  BlocConsumer<AddWorkspaceCubit, AddWorkspaceState>(
                     bloc: createWorkspaceCubit,
+                    listener: (context, state) async {
+                      if (state is AddWorkspaceSuccess) {
+                        if (context.mounted) {
+                          await context.read<WorkspacesMenuCubit>().fetchWorkspaces(showLoading: false);
+                        }
+                        if (context.mounted) {
+                          WebToast.showTop(
+                            duration: 2000.ms,
+                            toast: ToastData(
+                              message: LocaleKeys.messages_workspaceAdded.tr(),
+                              type: WebToastType.success,
+                            ),
+                            context: context,
+                          );
+                        }
+                        await Future.microtask(closePopup);
+                      } else if (state is AddWorkspaceFailure) {
+                        if (context.mounted) {
+                          WebToast.showTop(
+                            duration: 1500.ms,
+                            toast: ToastData(
+                              message: state.exception.message,
+                              type: WebToastType.error,
+                            ),
+                            context: context,
+                          );
+                        }
+                      }
+                    },
                     builder: (_, state) {
                       return LoadingButton(
                         label: LocaleKeys.common_add.tr(),
@@ -107,10 +138,6 @@ class AddWorkSpaceDialog extends HookWidget {
                               color: selectedColor.value,
                               icon: selectedIcon.value,
                             );
-                            if (context.mounted) {
-                              await context.read<WorkspacesMenuCubit>().fetchWorkspaces();
-                            }
-                            await Future.microtask(closePopup);
                           }
                         },
                       );

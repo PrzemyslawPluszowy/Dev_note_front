@@ -109,6 +109,19 @@
         "noWorkspaces": "Brak obszarów roboczych",
         "createFirstWorkspace": "Utwórz swój pierwszy obszar roboczy"
     },
+    "messages": {
+        "workspaceUpdated": "Workspace \"{name}\" został zaktualizowany",
+        "projectUpdated": "Projekt \"{name}\" został zaktualizowany",
+        "boardAdded": "Tablica została dodana",
+        "workspaceAdded": "Workspace został dodany",
+        "workspaceDeleteTitle": "Usuń workspace",
+        "workspaceDeleteConfirm": "Czy na pewno chcesz usunąć workspace \"{name}\"? Operacji tej nie można cofnąć.",
+        "workspaceDeleted": "Workspace został usunięty"
+    },
+    "labels": {
+        "boards": "Boardy",
+        "projects": "Projekty"
+    },
     "project": {
         "title": "Projekty",
         "createNew": "Utwórz nowy projekt",

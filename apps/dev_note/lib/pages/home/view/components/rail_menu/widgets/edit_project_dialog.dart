@@ -2,7 +2,7 @@ import 'package:dev_note/core/extensions/translation_api_exception.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/shared/widgets/custom_error_widget.dart';
 import 'package:dev_note/core/utils/di.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/cubit/edit_workspace_cubit.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/cubit/edit_project_cubit.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,35 +13,37 @@ import 'package:p_shared_ui/p_shared_ui.dart';
 import 'package:p_utils/p_utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class EditWorkspaceWidget extends HookWidget {
-  const EditWorkspaceWidget({
-    required this.workspace,
+class EditProjectDialog extends HookWidget {
+  const EditProjectDialog({
+    required this.projectModel,
     required this.closeCallback,
+    required this.workspaceId,
     super.key,
   });
 
-  final WorkspacesModel workspace;
+  final ProjectModel projectModel;
+  final String workspaceId;
   final void Function() closeCallback;
 
   @override
   Widget build(BuildContext context) {
-    final editWorkspaceCubit = useBloc(() => EditWorkspaceCubit(getIt<WorkspacesRepository>()));
+    final editProjectCubit = useBloc(() => EditProjectCubit(projectsRepository: getIt<ProjectsRepository>()));
     final FormGroup formBuilder = useMemoized(
       () => FormGroup({
         'name': FormControl<String>(
-          value: workspace.name,
+          value: projectModel.name,
           validators: [
             Validators.required,
             Validators.minLength(3),
           ],
         ),
         'description': FormControl<String>(
-          value: workspace.description,
+          value: projectModel.description,
         ),
       }),
     );
-    final selectedColor = useValueNotifier<ApiColorScheme?>(workspace.primaryColor);
-    final selectedIcon = useValueNotifier<ApiPhosphorIcons?>(workspace.icon);
+    final selectedColor = useValueNotifier<ApiColorScheme?>(projectModel.primaryColor);
+    final selectedIcon = useValueNotifier<ApiPhosphorIcons?>(projectModel.icon);
 
     return Container(
       margin: const EdgeInsets.only(left: Sizes.p8),
@@ -91,14 +93,14 @@ class EditWorkspaceWidget extends HookWidget {
                   ),
                   gapH8,
                   CustomColorSelector(
-                    initialColor: workspace.primaryColor,
+                    initialColor: projectModel.primaryColor,
                     onColorSelected: (color) {
                       selectedColor.value = color;
                     },
                   ),
                   gapH16,
                   IconSelector(
-                    initialIcon: workspace.icon,
+                    initialIcon: projectModel.icon,
                     onIconSelected: (icon) {
                       selectedIcon.value = icon;
                     },
@@ -108,13 +110,13 @@ class EditWorkspaceWidget extends HookWidget {
                     alignment: Alignment.topLeft,
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeInOut,
-                    child: BlocConsumer<EditWorkspaceCubit, EditWorkspaceState>(
-                      bloc: editWorkspaceCubit,
+                    child: BlocConsumer<EditProjectCubit, EditProjectState>(
+                      bloc: editProjectCubit,
                       listener: (_, state) async {
-                        if (state is EditWorkspaceSuccess) {
+                        if (state is EditProjectSuccess) {
                           WebToast.showTop(
                             toast: ToastData(
-                              message: LocaleKeys.messages_workspaceUpdated.tr(namedArgs: {'name': workspace.name}),
+                              message: LocaleKeys.messages_projectUpdated.tr(namedArgs: {'name': projectModel.name}),
                               type: WebToastType.success,
                             ),
                             context: context,
@@ -122,7 +124,7 @@ class EditWorkspaceWidget extends HookWidget {
                           await context.read<WorkspacesMenuCubit>().fetchWorkspaces(showLoading: false);
                           closeCallback();
                         }
-                        if (state is EditWorkspaceFailure) {
+                        if (state is EditProjectFailure) {
                           if (context.mounted) {
                             WebToast.showTop(
                               toast: ToastData(
@@ -135,7 +137,7 @@ class EditWorkspaceWidget extends HookWidget {
                         }
                       },
                       builder: (context, state) {
-                        if (state case EditWorkspaceFailure(:final error)) {
+                        if (state case EditProjectFailure(:final error)) {
                           return CustomErrorWidget(exception: error, width: double.infinity);
                         }
                         return const SizedBox.shrink();
@@ -151,8 +153,9 @@ class EditWorkspaceWidget extends HookWidget {
           LoadingButton(
             onPressed: () async {
               if (formBuilder.valid) {
-                await editWorkspaceCubit.editWorkspace(
-                  workspaceId: workspace.id,
+                await editProjectCubit.editProject(
+                  projectId: projectModel.id,
+                  workspaceId: workspaceId,
                   name: formBuilder.control('name').value as String,
                   description: formBuilder.control('description').value as String?,
                   icon: selectedIcon.value,

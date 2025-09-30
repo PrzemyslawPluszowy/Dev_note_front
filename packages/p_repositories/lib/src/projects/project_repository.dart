@@ -15,4 +15,18 @@ abstract class ProjectsRepository {
   Future<ProjectModel> createProject(
     @Body() CreateProjectRequest createProjectRequest,
   );
+
+  @PATCH('/projects/editProject/{projectId}/workspace/{workspaceId}')
+  Future<MessageResponse> editProject({
+    @Path('workspaceId') required String workspaceId,
+    @Path('projectId') required String projectId,
+    @Body() required EditProjectRequest createWorkspaceModel,
+  });
+
+  /// Usunięcie workspace'a z projektami
+  @DELETE('/projects/{projectId}/workspace/{workspaceId}')
+  Future<MessageResponse> deleteProject({
+    @Path('workspaceId') required String workspaceId,
+    @Path('projectId') required String projectId,
+  });
 }
