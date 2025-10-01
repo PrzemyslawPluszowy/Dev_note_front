@@ -124,6 +124,11 @@
     "projectUnhideTitle": "Pokaż projekt",
     "workspaceHideTitle": "Ukryj workspace",
     "workspaceUnhideTitle": "Pokaż workspace"
+    ,"noVisibleWorkspaces": "Brak widocznych workspace'ów",
+    "tooltipWorkspace": "🗂️ Workspace:\nnazwa: {name}\nopis: {desc}",
+    "tooltipProject": "📁 Projekt:\nnazwa: {name}\nopis: {desc}",
+    "tooltipBoard": "📋 Board:\nnazwa: {name}\nopis: {desc}",
+    "noDescription": "brak opisu"
     },
     "labels": {
         "boards": "Boardy",

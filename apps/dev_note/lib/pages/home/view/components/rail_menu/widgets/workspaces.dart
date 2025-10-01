@@ -8,6 +8,7 @@ import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_proje
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_workspace_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:p_repositories/repositories.dart';
 import 'package:p_shared_ui/p_shared_ui.dart';
@@ -53,7 +54,7 @@ class Workspaces extends StatelessWidget {
           if (workspaces.isEmpty) {
             return Center(
               child: Text(
-                'Dodaj swój pierwszy workspace',
+                LocaleKeys.workspace_createFirstWorkspace.tr(),
                 style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
             );
@@ -61,7 +62,7 @@ class Workspaces extends StatelessWidget {
           if (isAllHidden && (!isShowingHidden)) {
             return Center(
               child: Text(
-                "Brak widocznych workspace'ów",
+                LocaleKeys.messages_noVisibleWorkspaces.tr(),
                 style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
             );
@@ -113,54 +114,72 @@ class Workspaces extends StatelessWidget {
                           backgroundColor: workspace.primaryColor.toFlutterColor(),
                           child: Icon(workspace.icon.icon, size: Sizes.p12, color: Colors.white),
                         ),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                workspace.name,
-                                style: context.textTheme.bodyLarge,
-                                overflow: TextOverflow.ellipsis,
+                        title: Tooltip(
+                          constraints: const BoxConstraints(maxWidth: 150),
+                          message: LocaleKeys.messages_tooltipWorkspace.tr(
+                            namedArgs: {
+                              'name': workspace.name,
+                              'desc': workspace.description ?? LocaleKeys.messages_noDescription.tr(),
+                            },
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.onSurfaceVariant.withAlpha(230),
+                            borderRadius: BorderRadius.circular(Sizes.p4),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  workspace.name,
+                                  style: context.textTheme.bodyLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            CustomMenuPopup(
-                              menus: [
-                                CustomMenuOverlay(
-                                  title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.workspace_title.tr()}',
-                                  icon: PhosphorIcons.pencil(),
-                                  noodle: (context, animationStatus, close) =>
-                                      EditWorkspaceWidget(workspace: workspace, closeCallback: close),
+                              CustomMenuPopup(
+                                button: Icon(
+                                  PhosphorIcons.listPlus(),
+                                  size: Sizes.p16,
+                                  color: context.colorScheme.outline,
                                 ),
-                                CustomMenuOverlay(
-                                  title: LocaleKeys.messages_workspaceDeleteTitle.tr(),
-                                  icon: PhosphorIcons.trash(),
-                                  iconColor: Colors.red,
-                                  onTap: () async {
-                                    await showDialog<void>(
-                                      context: context,
-                                      builder: (_) {
-                                        return BlocProvider.value(
-                                          value: context.read<WorkspacesMenuCubit>(),
-                                          child: DeleteWorksPaceDialog(workspace: workspace),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                                CustomMenuOverlay(
-                                  title: (workspace.isHide ?? false)
-                                      ? LocaleKeys.messages_workspaceUnhideTitle.tr()
-                                      : LocaleKeys.messages_workspaceHideTitle.tr(),
-                                  icon: (workspace.isHide ?? false) ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
-                                  onTap: () {
-                                    context.read<WorkspacesMenuCubit>().toggleWorkspaceVisibility(
-                                      workspaceId: workspace.id,
-                                      isHide: !(workspace.isHide ?? false),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
+                                menus: [
+                                  CustomMenuOverlay(
+                                    title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.workspace_title.tr()}',
+                                    icon: PhosphorIcons.pencil(),
+                                    noodle: (context, animationStatus, close) =>
+                                        EditWorkspaceWidget(workspace: workspace, closeCallback: close),
+                                  ),
+                                  CustomMenuOverlay(
+                                    title: LocaleKeys.messages_workspaceDeleteTitle.tr(),
+                                    icon: PhosphorIcons.trash(),
+                                    iconColor: Colors.red,
+                                    onTap: () async {
+                                      await showDialog<void>(
+                                        context: context,
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: context.read<WorkspacesMenuCubit>(),
+                                            child: DeleteWorksPaceDialog(workspace: workspace),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  CustomMenuOverlay(
+                                    title: (workspace.isHide ?? false)
+                                        ? LocaleKeys.messages_workspaceUnhideTitle.tr()
+                                        : LocaleKeys.messages_workspaceHideTitle.tr(),
+                                    icon: (workspace.isHide ?? false) ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
+                                    onTap: () {
+                                      context.read<WorkspacesMenuCubit>().toggleWorkspaceVisibility(
+                                        workspaceId: workspace.id,
+                                        isHide: !(workspace.isHide ?? false),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         childrenPadding: const EdgeInsets.fromLTRB(Sizes.p12, 0, Sizes.p12, 0),
                         children: [
@@ -269,61 +288,80 @@ class _ProjectsList extends StatelessWidget {
                   backgroundColor: project.primaryColor.toFlutterColor(),
                   child: PhosphorIcon(project.icon.icon, size: Sizes.p12, color: Colors.white),
                 ),
-                title: Row(
-                  children: [
-                    Text(
-                      project.name,
-                      style: context.textTheme.bodyLarge,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(),
-                    CustomMenuPopup(
-                      menus: [
-                        CustomMenuOverlay(
-                          title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.project_title.tr()}',
-                          icon: PhosphorIcons.pencil(),
-                          noodle: (context, animationStatus, close) => EditProjectDialog(
-                            projectModel: project,
-                            workspaceId: workspace.id,
-                            closeCallback: close,
-                          ),
+                title: Tooltip(
+                  constraints: const BoxConstraints(maxWidth: 200),
+                  message: LocaleKeys.messages_tooltipProject.tr(
+                    namedArgs: {
+                      'name': project.name,
+                      'desc': project.description ?? LocaleKeys.messages_noDescription.tr(),
+                    },
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.onSurfaceVariant.withAlpha(230),
+                    borderRadius: BorderRadius.circular(Sizes.p4),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        project.name,
+                        style: context.textTheme.bodyLarge,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Spacer(),
+                      CustomMenuPopup(
+                        button: Icon(
+                          PhosphorIcons.listPlus(),
+                          size: Sizes.p16,
+                          color: context.colorScheme.outline,
                         ),
-                        CustomMenuOverlay(
-                          title: project.isHide ?? false
-                              ? LocaleKeys.messages_projectUnhideTitle.tr()
-                              : LocaleKeys.messages_projectHideTitle.tr(),
-                          icon: project.isHide ?? false ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
-                          onTap: () {
-                            context.read<WorkspacesMenuCubit>().toggleProjectVisibility(
+
+                        menus: [
+                          CustomMenuOverlay(
+                            title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.project_title.tr()}',
+                            icon: PhosphorIcons.pencil(),
+                            noodle: (context, animationStatus, close) => EditProjectDialog(
+                              projectModel: project,
                               workspaceId: workspace.id,
-                              projectId: project.id,
-                              isHide: !(project.isHide ?? false),
-                            );
-                          },
-                        ),
-                        CustomMenuOverlay(
-                          title: '${LocaleKeys.common_delete.tr()} ${LocaleKeys.project_title.tr()}',
-                          icon: PhosphorIcons.trash(),
-                          iconColor: Colors.red,
-                          onTap: () async {
-                            await showDialog<void>(
-                              context: context,
-                              builder: (_) {
-                                return BlocProvider.value(
-                                  value: context.read<WorkspacesMenuCubit>(),
-                                  child: DeleteProjectDialog(
-                                    workspaceId: workspace.id,
-                                    projectId: project.id,
-                                    projectName: project.name,
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                              closeCallback: close,
+                            ),
+                          ),
+                          CustomMenuOverlay(
+                            title: project.isHide ?? false
+                                ? LocaleKeys.messages_projectUnhideTitle.tr()
+                                : LocaleKeys.messages_projectHideTitle.tr(),
+                            icon: project.isHide ?? false ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
+                            onTap: () {
+                              context.read<WorkspacesMenuCubit>().toggleProjectVisibility(
+                                workspaceId: workspace.id,
+                                projectId: project.id,
+                                isHide: !(project.isHide ?? false),
+                              );
+                            },
+                          ),
+                          CustomMenuOverlay(
+                            title: '${LocaleKeys.common_delete.tr()} ${LocaleKeys.project_title.tr()}',
+                            icon: PhosphorIcons.trash(),
+                            iconColor: Colors.red,
+                            onTap: () async {
+                              await showDialog<void>(
+                                context: context,
+                                builder: (_) {
+                                  return BlocProvider.value(
+                                    value: context.read<WorkspacesMenuCubit>(),
+                                    child: DeleteProjectDialog(
+                                      workspaceId: workspace.id,
+                                      projectId: project.id,
+                                      projectName: project.name,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 childrenPadding: const EdgeInsets.only(left: Sizes.p8),
                 children: [
@@ -392,29 +430,74 @@ class _BoardsList extends StatelessWidget {
       proxyDecorator: (child, index, animation) => child,
       itemBuilder: (context, index) {
         final board = project.boards[index];
+        if ((board.isHide ?? false) && (!isShowingHidden)) {
+          return SizedBox(key: ValueKey('board_placeholder_${board.id}'));
+        }
         return Material(
           key: ValueKey('board_${board.id}'),
           color: Colors.transparent,
           child: ReorderableDragStartListener(
             key: ValueKey('board_${board.id}'),
             index: index,
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
-              dense: true,
-              visualDensity: VisualDensity.compact,
-              leading: CircleAvatar(
-                radius: 10,
-                backgroundColor: context.colorScheme.primary,
-                child: Icon(PhosphorIcons.database(), size: Sizes.p12, color: Colors.white),
+            child: Tooltip(
+              constraints: const BoxConstraints(maxWidth: 200),
+              decoration: BoxDecoration(
+                color: context.colorScheme.onSurfaceVariant.withAlpha(230),
+                borderRadius: BorderRadius.circular(Sizes.p4),
               ),
-              title: Text(
-                board.name,
-                style: context.textTheme.bodyMedium,
-                overflow: TextOverflow.ellipsis,
+              message: LocaleKeys.messages_tooltipBoard.tr(
+                namedArgs: {
+                  'name': board.name,
+                  'desc': board.description ?? LocaleKeys.messages_noDescription.tr(),
+                },
               ),
-              onTap: () {
-                // TODO(dev-note): Handle board selection via navigation/cubit.
-              },
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                leading: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: context.colorScheme.primary,
+                  child: Icon(PhosphorIcons.database(), size: Sizes.p12, color: Colors.white),
+                ),
+                title: Text(
+                  board.name,
+                  style: context.textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: IconButton(
+                  onPressed: () async {
+                    context.read<WorkspacesMenuCubit>().toggleBoardVisibility(
+                      workspaceId: project.workspaceId,
+                      projectId: project.id,
+                      boardId: board.id,
+                      isHide: !(board.isHide ?? false),
+                    );
+                  },
+                  icon: AnimatedSwitcher(
+                    duration: 200.ms,
+                    transitionBuilder: (child, animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: (board.isHide ?? false)
+                        ? Icon(
+                            key: const ValueKey('eye_icon'),
+                            PhosphorIcons.eye(),
+                            size: Sizes.p16,
+                            color: context.colorScheme.outline,
+                          )
+                        : Icon(
+                            key: const ValueKey('eye_slash_icon'),
+                            PhosphorIcons.eyeSlash(),
+                            size: Sizes.p16,
+                            color: context.colorScheme.outline,
+                          ),
+                  ),
+                ),
+                onTap: () {
+                  // TODO(dev-note): Handle board selection via navigation/cubit.
+                },
+              ),
             ),
           ),
         );
