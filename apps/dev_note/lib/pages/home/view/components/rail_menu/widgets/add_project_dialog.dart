@@ -131,8 +131,6 @@ class AddProjectDialog extends HookWidget {
                               primaryColor: selectedColor.value,
                               icon: selectedIcon.value,
                             );
-
-                            await Future.microtask(closePopup);
                           }
                         },
                       );

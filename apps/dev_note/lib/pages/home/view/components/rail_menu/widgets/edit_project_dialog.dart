@@ -6,6 +6,7 @@ import 'package:dev_note/pages/home/view/components/rail_menu/cubit/edit_project
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:p_repositories/repositories.dart';
@@ -108,7 +109,7 @@ class EditProjectDialog extends HookWidget {
                   gapH8,
                   AnimatedSize(
                     alignment: Alignment.topLeft,
-                    duration: const Duration(milliseconds: 220),
+                    duration: 220.ms,
                     curve: Curves.easeInOut,
                     child: BlocConsumer<EditProjectCubit, EditProjectState>(
                       bloc: editProjectCubit,

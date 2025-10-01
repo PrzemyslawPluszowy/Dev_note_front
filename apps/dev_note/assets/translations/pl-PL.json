@@ -117,6 +117,13 @@
         "workspaceDeleteTitle": "Usuń workspace",
         "workspaceDeleteConfirm": "Czy na pewno chcesz usunąć workspace \"{name}\"? Operacji tej nie można cofnąć.",
         "workspaceDeleted": "Workspace został usunięty"
+    ,"projectDeleteTitle": "Usuń projekt",
+        "projectDeleteConfirm": "Czy na pewno chcesz usunąć projekt \"{name}\"? Operacji tej nie można cofnąć.",
+        "projectDeleted": "Projekt został usunięty"
+    ,"projectHideTitle": "Ukryj projekt",
+    "projectUnhideTitle": "Pokaż projekt",
+    "workspaceHideTitle": "Ukryj workspace",
+    "workspaceUnhideTitle": "Pokaż workspace"
     },
     "labels": {
         "boards": "Boardy",

@@ -1,4 +1,4 @@
-import 'package:dev_note/core/data_source/dio_client.dart';
+import 'package:dev_note/core/data_client/dio_client.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:flutter/foundation.dart';
 import 'package:p_repositories/repositories.dart';

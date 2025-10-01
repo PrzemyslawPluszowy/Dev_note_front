@@ -1,4 +1,4 @@
-// dart format width=80
+// dart format width=120
 
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
@@ -15,8 +15,7 @@ class $AssetsImagesGen {
   const $AssetsImagesGen();
 
   /// File path: assets/images/login_bg.jpg
-  AssetGenImage get loginBg =>
-      const AssetGenImage('assets/images/login_bg.jpg');
+  AssetGenImage get loginBg => const AssetGenImage('assets/images/login_bg.jpg');
 
   /// List of all assets
   List<AssetGenImage> get values => [loginBg];
@@ -43,12 +42,7 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-    this.animation,
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}, this.animation});
 
   final String _assetName;
 
@@ -119,11 +113,7 @@ class AssetGenImage {
 }
 
 class AssetGenImageAnimation {
-  const AssetGenImageAnimation({
-    required this.isAnimation,
-    required this.duration,
-    required this.frames,
-  });
+  const AssetGenImageAnimation({required this.isAnimation, required this.duration, required this.frames});
 
   final bool isAnimation;
   final Duration duration;

@@ -2,6 +2,7 @@ import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_m
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_work_space_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/workspaces.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:p_shared_ui/p_shared_ui.dart';
 import 'package:p_utils/p_utils.dart';
@@ -51,7 +52,48 @@ class _WorkspacesLabel extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+        ).animate().fadeIn(duration: 500.ms).moveX(duration: 500.ms, begin: -120, end: 0),
+        BlocBuilder<WorkspacesMenuCubit, WorkspacesMenuState>(
+          builder: (context, state) {
+            if (state case WorkspacesMenuSuccess(:final isShowingHidden)) {
+              return AnimatedSwitcher(
+                duration: 500.ms,
+                transitionBuilder: (child, animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: isShowingHidden
+                    ? IconButton(
+                        key: const ValueKey('hide'),
+                        padding: EdgeInsets.zero,
+                        onPressed: () async {
+                          await context.read<WorkspacesMenuCubit>().toggleHiddenMenu();
+                        },
+                        icon: PhosphorIcon(
+                          PhosphorIcons.eyeSlash(),
+                          size: Sizes.p16,
+                          color: Colors.white,
+                        ),
+                      )
+                    : IconButton(
+                        key: const ValueKey('show'),
+                        padding: EdgeInsets.zero,
+                        onPressed: () async {
+                          await context.read<WorkspacesMenuCubit>().toggleHiddenMenu();
+                        },
+                        icon: PhosphorIcon(
+                          PhosphorIcons.eye(),
+                          size: Sizes.p16,
+                          color: Colors.white,
+                        ),
+                      ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
+        gapW8,
+
         // Dodaj workspace
         CustomPopup(
           width: 500,
@@ -77,7 +119,7 @@ class _WorkspacesLabel extends StatelessWidget {
             size: Sizes.p16,
             color: Colors.white,
           ),
-        ),
+        ).animate().fadeIn(duration: 500.ms),
       ],
     );
   }

@@ -18,12 +18,24 @@ final class WorkspacesMenuLoading extends WorkspacesMenuState {
 final class WorkspacesMenuSuccess extends WorkspacesMenuState {
   const WorkspacesMenuSuccess({
     required this.workspaces,
+    this.isShowingHidden = false,
   });
 
   final List<WorkspacesModel> workspaces;
+  final bool isShowingHidden;
+
+  WorkspacesMenuSuccess copyWith({
+    List<WorkspacesModel>? workspaces,
+    bool? isShowingHidden,
+  }) {
+    return WorkspacesMenuSuccess(
+      workspaces: workspaces ?? this.workspaces,
+      isShowingHidden: isShowingHidden ?? this.isShowingHidden,
+    );
+  }
 
   @override
-  List<Object> get props => [workspaces];
+  List<Object> get props => [workspaces, isShowingHidden];
 }
 
 final class WorkspacesMenuFailure extends WorkspacesMenuState {

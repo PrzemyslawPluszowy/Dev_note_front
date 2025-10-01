@@ -117,6 +117,13 @@
         "workspaceDeleteTitle": "Delete workspace",
         "workspaceDeleteConfirm": "Are you sure you want to delete workspace \"{name}\"? This operation cannot be undone.",
         "workspaceDeleted": "Workspace has been deleted"
+    ,"projectDeleteTitle": "Delete project",
+        "projectDeleteConfirm": "Are you sure you want to delete project \"{name}\"? This operation cannot be undone.",
+        "projectDeleted": "Project has been deleted"
+    ,"projectHideTitle": "Hide project",
+    "projectUnhideTitle": "Unhide project",
+    "workspaceHideTitle": "Hide workspace",
+    "workspaceUnhideTitle": "Unhide workspace"
     },
     "labels": {
         "boards": "Boards",

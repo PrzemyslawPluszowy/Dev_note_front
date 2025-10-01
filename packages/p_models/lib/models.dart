@@ -19,4 +19,5 @@ export 'package:p_models/src/user/auth_user_response.dart';
 export 'package:p_models/src/workspaces/create_workspace_model.dart';
 export 'package:p_models/src/workspaces/enums/project_role.dart';
 export 'package:p_models/src/workspaces/enums/workspace_role.dart';
+export 'package:p_models/src/workspaces/reorderable_list.dart';
 export 'package:p_models/src/workspaces/workspaces_model.dart';

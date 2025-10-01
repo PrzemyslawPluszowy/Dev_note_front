@@ -18,6 +18,13 @@ abstract class WorkspacesModel with _$WorkspacesModel {
     required DateTime createdAt,
     @WorkspaceRoleSerializer() required WorkspaceRole workspaceRole,
     required List<ProjectModel> projects,
+    //explity json
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isHide,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isExpanded,
   }) = _WorkspacesModel;
 
   factory WorkspacesModel.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +43,12 @@ abstract class ProjectModel with _$ProjectModel {
     @ApiColorSchemeSerializer() required ApiColorScheme primaryColor,
     @ProjectRoleSerializer() required ProjectRole projectRole,
     required List<BoardShortModel> boards,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isHide,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isExpanded,
   }) = _ProjectModel;
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -51,6 +64,12 @@ abstract class BoardShortModel with _$BoardShortModel {
     required String projectId,
     required DateTime createdAt,
     DateTime? updatedAt,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isSelected,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(false)
+    bool? isHide,
   }) = _BoardShortModel;
 
   factory BoardShortModel.fromJson(Map<String, dynamic> json) =>

@@ -17,7 +17,7 @@ abstract class ProjectsRepository {
   );
 
   @PATCH('/projects/editProject/{projectId}/workspace/{workspaceId}')
-  Future<MessageResponse> editProject({
+  Future<void> editProject({
     @Path('workspaceId') required String workspaceId,
     @Path('projectId') required String projectId,
     @Body() required EditProjectRequest createWorkspaceModel,

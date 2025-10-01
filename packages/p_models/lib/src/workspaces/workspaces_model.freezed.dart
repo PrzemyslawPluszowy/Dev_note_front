@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WorkspacesModel {
 
- String get id; String get name; String? get description;@PhosphorIconsSerializer() ApiPhosphorIcons get icon;@ApiColorSchemeSerializer() ApiColorScheme get primaryColor; DateTime get createdAt;@WorkspaceRoleSerializer() WorkspaceRole get workspaceRole; List<ProjectModel> get projects;
+ String get id; String get name; String? get description;@PhosphorIconsSerializer() ApiPhosphorIcons get icon;@ApiColorSchemeSerializer() ApiColorScheme get primaryColor; DateTime get createdAt;@WorkspaceRoleSerializer() WorkspaceRole get workspaceRole; List<ProjectModel> get projects;//explity json
+@JsonKey(includeFromJson: false, includeToJson: false) bool? get isHide;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isExpanded;
 /// Create a copy of WorkspacesModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $WorkspacesModelCopyWith<WorkspacesModel> get copyWith => _$WorkspacesModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspacesModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.workspaceRole, workspaceRole) || other.workspaceRole == workspaceRole)&&const DeepCollectionEquality().equals(other.projects, projects));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspacesModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.workspaceRole, workspaceRole) || other.workspaceRole == workspaceRole)&&const DeepCollectionEquality().equals(other.projects, projects)&&(identical(other.isHide, isHide) || other.isHide == isHide)&&(identical(other.isExpanded, isExpanded) || other.isExpanded == isExpanded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,icon,primaryColor,createdAt,workspaceRole,const DeepCollectionEquality().hash(projects));
+int get hashCode => Object.hash(runtimeType,id,name,description,icon,primaryColor,createdAt,workspaceRole,const DeepCollectionEquality().hash(projects),isHide,isExpanded);
 
 @override
 String toString() {
-  return 'WorkspacesModel(id: $id, name: $name, description: $description, icon: $icon, primaryColor: $primaryColor, createdAt: $createdAt, workspaceRole: $workspaceRole, projects: $projects)';
+  return 'WorkspacesModel(id: $id, name: $name, description: $description, icon: $icon, primaryColor: $primaryColor, createdAt: $createdAt, workspaceRole: $workspaceRole, projects: $projects, isHide: $isHide, isExpanded: $isExpanded)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $WorkspacesModelCopyWith<$Res>  {
   factory $WorkspacesModelCopyWith(WorkspacesModel value, $Res Function(WorkspacesModel) _then) = _$WorkspacesModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor, DateTime createdAt,@WorkspaceRoleSerializer() WorkspaceRole workspaceRole, List<ProjectModel> projects
+ String id, String name, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor, DateTime createdAt,@WorkspaceRoleSerializer() WorkspaceRole workspaceRole, List<ProjectModel> projects,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide,@JsonKey(includeFromJson: false, includeToJson: false) bool? isExpanded
 });
 
 
@@ -65,7 +66,7 @@ class _$WorkspacesModelCopyWithImpl<$Res>
 
 /// Create a copy of WorkspacesModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? createdAt = null,Object? workspaceRole = null,Object? projects = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? createdAt = null,Object? workspaceRole = null,Object? projects = null,Object? isHide = freezed,Object? isExpanded = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -75,7 +76,9 @@ as ApiPhosphorIcons,primaryColor: null == primaryColor ? _self.primaryColor : pr
 as ApiColorScheme,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,workspaceRole: null == workspaceRole ? _self.workspaceRole : workspaceRole // ignore: cast_nullable_to_non_nullable
 as WorkspaceRole,projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
-as List<ProjectModel>,
+as List<ProjectModel>,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,isExpanded: freezed == isExpanded ? _self.isExpanded : isExpanded // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -160,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkspacesModel() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects);case _:
+return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects,_that.isHide,_that.isExpanded);case _:
   return orElse();
 
 }
@@ -181,10 +184,10 @@ return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)  $default,) {final _that = this;
 switch (_that) {
 case _WorkspacesModel():
-return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects);case _:
+return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects,_that.isHide,_that.isExpanded);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +204,10 @@ return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor,  DateTime createdAt, @WorkspaceRoleSerializer()  WorkspaceRole workspaceRole,  List<ProjectModel> projects, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkspacesModel() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects);case _:
+return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryColor,_that.createdAt,_that.workspaceRole,_that.projects,_that.isHide,_that.isExpanded);case _:
   return null;
 
 }
@@ -216,7 +219,7 @@ return $default(_that.id,_that.name,_that.description,_that.icon,_that.primaryCo
 @JsonSerializable()
 
 class _WorkspacesModel implements WorkspacesModel {
-  const _WorkspacesModel({required this.id, required this.name, this.description, @PhosphorIconsSerializer() required this.icon, @ApiColorSchemeSerializer() required this.primaryColor, required this.createdAt, @WorkspaceRoleSerializer() required this.workspaceRole, required final  List<ProjectModel> projects}): _projects = projects;
+  const _WorkspacesModel({required this.id, required this.name, this.description, @PhosphorIconsSerializer() required this.icon, @ApiColorSchemeSerializer() required this.primaryColor, required this.createdAt, @WorkspaceRoleSerializer() required this.workspaceRole, required final  List<ProjectModel> projects, @JsonKey(includeFromJson: false, includeToJson: false) this.isHide = false, @JsonKey(includeFromJson: false, includeToJson: false) this.isExpanded = false}): _projects = projects;
   factory _WorkspacesModel.fromJson(Map<String, dynamic> json) => _$WorkspacesModelFromJson(json);
 
 @override final  String id;
@@ -233,6 +236,9 @@ class _WorkspacesModel implements WorkspacesModel {
   return EqualUnmodifiableListView(_projects);
 }
 
+//explity json
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isHide;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isExpanded;
 
 /// Create a copy of WorkspacesModel
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspacesModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.workspaceRole, workspaceRole) || other.workspaceRole == workspaceRole)&&const DeepCollectionEquality().equals(other._projects, _projects));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspacesModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.workspaceRole, workspaceRole) || other.workspaceRole == workspaceRole)&&const DeepCollectionEquality().equals(other._projects, _projects)&&(identical(other.isHide, isHide) || other.isHide == isHide)&&(identical(other.isExpanded, isExpanded) || other.isExpanded == isExpanded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,icon,primaryColor,createdAt,workspaceRole,const DeepCollectionEquality().hash(_projects));
+int get hashCode => Object.hash(runtimeType,id,name,description,icon,primaryColor,createdAt,workspaceRole,const DeepCollectionEquality().hash(_projects),isHide,isExpanded);
 
 @override
 String toString() {
-  return 'WorkspacesModel(id: $id, name: $name, description: $description, icon: $icon, primaryColor: $primaryColor, createdAt: $createdAt, workspaceRole: $workspaceRole, projects: $projects)';
+  return 'WorkspacesModel(id: $id, name: $name, description: $description, icon: $icon, primaryColor: $primaryColor, createdAt: $createdAt, workspaceRole: $workspaceRole, projects: $projects, isHide: $isHide, isExpanded: $isExpanded)';
 }
 
 
@@ -267,7 +273,7 @@ abstract mixin class _$WorkspacesModelCopyWith<$Res> implements $WorkspacesModel
   factory _$WorkspacesModelCopyWith(_WorkspacesModel value, $Res Function(_WorkspacesModel) _then) = __$WorkspacesModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor, DateTime createdAt,@WorkspaceRoleSerializer() WorkspaceRole workspaceRole, List<ProjectModel> projects
+ String id, String name, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor, DateTime createdAt,@WorkspaceRoleSerializer() WorkspaceRole workspaceRole, List<ProjectModel> projects,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide,@JsonKey(includeFromJson: false, includeToJson: false) bool? isExpanded
 });
 
 
@@ -284,7 +290,7 @@ class __$WorkspacesModelCopyWithImpl<$Res>
 
 /// Create a copy of WorkspacesModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? createdAt = null,Object? workspaceRole = null,Object? projects = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? createdAt = null,Object? workspaceRole = null,Object? projects = null,Object? isHide = freezed,Object? isExpanded = freezed,}) {
   return _then(_WorkspacesModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -294,7 +300,9 @@ as ApiPhosphorIcons,primaryColor: null == primaryColor ? _self.primaryColor : pr
 as ApiColorScheme,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,workspaceRole: null == workspaceRole ? _self.workspaceRole : workspaceRole // ignore: cast_nullable_to_non_nullable
 as WorkspaceRole,projects: null == projects ? _self._projects : projects // ignore: cast_nullable_to_non_nullable
-as List<ProjectModel>,
+as List<ProjectModel>,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,isExpanded: freezed == isExpanded ? _self.isExpanded : isExpanded // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -305,7 +313,7 @@ as List<ProjectModel>,
 /// @nodoc
 mixin _$ProjectModel {
 
- String get id; String get name; String get workspaceId; DateTime get createdAt; String? get description;@PhosphorIconsSerializer() ApiPhosphorIcons get icon;@ApiColorSchemeSerializer() ApiColorScheme get primaryColor;@ProjectRoleSerializer() ProjectRole get projectRole; List<BoardShortModel> get boards;
+ String get id; String get name; String get workspaceId; DateTime get createdAt; String? get description;@PhosphorIconsSerializer() ApiPhosphorIcons get icon;@ApiColorSchemeSerializer() ApiColorScheme get primaryColor;@ProjectRoleSerializer() ProjectRole get projectRole; List<BoardShortModel> get boards;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isHide;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isExpanded;
 /// Create a copy of ProjectModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -318,16 +326,16 @@ $ProjectModelCopyWith<ProjectModel> get copyWith => _$ProjectModelCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workspaceId, workspaceId) || other.workspaceId == workspaceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.projectRole, projectRole) || other.projectRole == projectRole)&&const DeepCollectionEquality().equals(other.boards, boards));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workspaceId, workspaceId) || other.workspaceId == workspaceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.projectRole, projectRole) || other.projectRole == projectRole)&&const DeepCollectionEquality().equals(other.boards, boards)&&(identical(other.isHide, isHide) || other.isHide == isHide)&&(identical(other.isExpanded, isExpanded) || other.isExpanded == isExpanded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,workspaceId,createdAt,description,icon,primaryColor,projectRole,const DeepCollectionEquality().hash(boards));
+int get hashCode => Object.hash(runtimeType,id,name,workspaceId,createdAt,description,icon,primaryColor,projectRole,const DeepCollectionEquality().hash(boards),isHide,isExpanded);
 
 @override
 String toString() {
-  return 'ProjectModel(id: $id, name: $name, workspaceId: $workspaceId, createdAt: $createdAt, description: $description, icon: $icon, primaryColor: $primaryColor, projectRole: $projectRole, boards: $boards)';
+  return 'ProjectModel(id: $id, name: $name, workspaceId: $workspaceId, createdAt: $createdAt, description: $description, icon: $icon, primaryColor: $primaryColor, projectRole: $projectRole, boards: $boards, isHide: $isHide, isExpanded: $isExpanded)';
 }
 
 
@@ -338,7 +346,7 @@ abstract mixin class $ProjectModelCopyWith<$Res>  {
   factory $ProjectModelCopyWith(ProjectModel value, $Res Function(ProjectModel) _then) = _$ProjectModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String workspaceId, DateTime createdAt, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor,@ProjectRoleSerializer() ProjectRole projectRole, List<BoardShortModel> boards
+ String id, String name, String workspaceId, DateTime createdAt, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor,@ProjectRoleSerializer() ProjectRole projectRole, List<BoardShortModel> boards,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide,@JsonKey(includeFromJson: false, includeToJson: false) bool? isExpanded
 });
 
 
@@ -355,7 +363,7 @@ class _$ProjectModelCopyWithImpl<$Res>
 
 /// Create a copy of ProjectModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? workspaceId = null,Object? createdAt = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? projectRole = null,Object? boards = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? workspaceId = null,Object? createdAt = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? projectRole = null,Object? boards = null,Object? isHide = freezed,Object? isExpanded = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -366,7 +374,9 @@ as String?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_no
 as ApiPhosphorIcons,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as ApiColorScheme,projectRole: null == projectRole ? _self.projectRole : projectRole // ignore: cast_nullable_to_non_nullable
 as ProjectRole,boards: null == boards ? _self.boards : boards // ignore: cast_nullable_to_non_nullable
-as List<BoardShortModel>,
+as List<BoardShortModel>,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,isExpanded: freezed == isExpanded ? _self.isExpanded : isExpanded // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -451,10 +461,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectModel() when $default != null:
-return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards);case _:
+return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards,_that.isHide,_that.isExpanded);case _:
   return orElse();
 
 }
@@ -472,10 +482,10 @@ return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectModel():
-return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards);case _:
+return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards,_that.isHide,_that.isExpanded);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -492,10 +502,10 @@ return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String workspaceId,  DateTime createdAt,  String? description, @PhosphorIconsSerializer()  ApiPhosphorIcons icon, @ApiColorSchemeSerializer()  ApiColorScheme primaryColor, @ProjectRoleSerializer()  ProjectRole projectRole,  List<BoardShortModel> boards, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isExpanded)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectModel() when $default != null:
-return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards);case _:
+return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.description,_that.icon,_that.primaryColor,_that.projectRole,_that.boards,_that.isHide,_that.isExpanded);case _:
   return null;
 
 }
@@ -507,7 +517,7 @@ return $default(_that.id,_that.name,_that.workspaceId,_that.createdAt,_that.desc
 @JsonSerializable()
 
 class _ProjectModel implements ProjectModel {
-  const _ProjectModel({required this.id, required this.name, required this.workspaceId, required this.createdAt, this.description, @PhosphorIconsSerializer() required this.icon, @ApiColorSchemeSerializer() required this.primaryColor, @ProjectRoleSerializer() required this.projectRole, required final  List<BoardShortModel> boards}): _boards = boards;
+  const _ProjectModel({required this.id, required this.name, required this.workspaceId, required this.createdAt, this.description, @PhosphorIconsSerializer() required this.icon, @ApiColorSchemeSerializer() required this.primaryColor, @ProjectRoleSerializer() required this.projectRole, required final  List<BoardShortModel> boards, @JsonKey(includeFromJson: false, includeToJson: false) this.isHide = false, @JsonKey(includeFromJson: false, includeToJson: false) this.isExpanded = false}): _boards = boards;
   factory _ProjectModel.fromJson(Map<String, dynamic> json) => _$ProjectModelFromJson(json);
 
 @override final  String id;
@@ -525,6 +535,8 @@ class _ProjectModel implements ProjectModel {
   return EqualUnmodifiableListView(_boards);
 }
 
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isHide;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isExpanded;
 
 /// Create a copy of ProjectModel
 /// with the given fields replaced by the non-null parameter values.
@@ -539,16 +551,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workspaceId, workspaceId) || other.workspaceId == workspaceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.projectRole, projectRole) || other.projectRole == projectRole)&&const DeepCollectionEquality().equals(other._boards, _boards));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.workspaceId, workspaceId) || other.workspaceId == workspaceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.projectRole, projectRole) || other.projectRole == projectRole)&&const DeepCollectionEquality().equals(other._boards, _boards)&&(identical(other.isHide, isHide) || other.isHide == isHide)&&(identical(other.isExpanded, isExpanded) || other.isExpanded == isExpanded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,workspaceId,createdAt,description,icon,primaryColor,projectRole,const DeepCollectionEquality().hash(_boards));
+int get hashCode => Object.hash(runtimeType,id,name,workspaceId,createdAt,description,icon,primaryColor,projectRole,const DeepCollectionEquality().hash(_boards),isHide,isExpanded);
 
 @override
 String toString() {
-  return 'ProjectModel(id: $id, name: $name, workspaceId: $workspaceId, createdAt: $createdAt, description: $description, icon: $icon, primaryColor: $primaryColor, projectRole: $projectRole, boards: $boards)';
+  return 'ProjectModel(id: $id, name: $name, workspaceId: $workspaceId, createdAt: $createdAt, description: $description, icon: $icon, primaryColor: $primaryColor, projectRole: $projectRole, boards: $boards, isHide: $isHide, isExpanded: $isExpanded)';
 }
 
 
@@ -559,7 +571,7 @@ abstract mixin class _$ProjectModelCopyWith<$Res> implements $ProjectModelCopyWi
   factory _$ProjectModelCopyWith(_ProjectModel value, $Res Function(_ProjectModel) _then) = __$ProjectModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String workspaceId, DateTime createdAt, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor,@ProjectRoleSerializer() ProjectRole projectRole, List<BoardShortModel> boards
+ String id, String name, String workspaceId, DateTime createdAt, String? description,@PhosphorIconsSerializer() ApiPhosphorIcons icon,@ApiColorSchemeSerializer() ApiColorScheme primaryColor,@ProjectRoleSerializer() ProjectRole projectRole, List<BoardShortModel> boards,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide,@JsonKey(includeFromJson: false, includeToJson: false) bool? isExpanded
 });
 
 
@@ -576,7 +588,7 @@ class __$ProjectModelCopyWithImpl<$Res>
 
 /// Create a copy of ProjectModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? workspaceId = null,Object? createdAt = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? projectRole = null,Object? boards = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? workspaceId = null,Object? createdAt = null,Object? description = freezed,Object? icon = null,Object? primaryColor = null,Object? projectRole = null,Object? boards = null,Object? isHide = freezed,Object? isExpanded = freezed,}) {
   return _then(_ProjectModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -587,7 +599,9 @@ as String?,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_no
 as ApiPhosphorIcons,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as ApiColorScheme,projectRole: null == projectRole ? _self.projectRole : projectRole // ignore: cast_nullable_to_non_nullable
 as ProjectRole,boards: null == boards ? _self._boards : boards // ignore: cast_nullable_to_non_nullable
-as List<BoardShortModel>,
+as List<BoardShortModel>,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,isExpanded: freezed == isExpanded ? _self.isExpanded : isExpanded // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -598,7 +612,7 @@ as List<BoardShortModel>,
 /// @nodoc
 mixin _$BoardShortModel {
 
- String get id; String get name; String? get description; String get projectId; DateTime get createdAt; DateTime? get updatedAt;
+ String get id; String get name; String? get description; String get projectId; DateTime get createdAt; DateTime? get updatedAt;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isSelected;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isHide;
 /// Create a copy of BoardShortModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -611,16 +625,16 @@ $BoardShortModelCopyWith<BoardShortModel> get copyWith => _$BoardShortModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BoardShortModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BoardShortModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected)&&(identical(other.isHide, isHide) || other.isHide == isHide));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,projectId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,projectId,createdAt,updatedAt,isSelected,isHide);
 
 @override
 String toString() {
-  return 'BoardShortModel(id: $id, name: $name, description: $description, projectId: $projectId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'BoardShortModel(id: $id, name: $name, description: $description, projectId: $projectId, createdAt: $createdAt, updatedAt: $updatedAt, isSelected: $isSelected, isHide: $isHide)';
 }
 
 
@@ -631,7 +645,7 @@ abstract mixin class $BoardShortModelCopyWith<$Res>  {
   factory $BoardShortModelCopyWith(BoardShortModel value, $Res Function(BoardShortModel) _then) = _$BoardShortModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? description, String projectId, DateTime createdAt, DateTime? updatedAt
+ String id, String name, String? description, String projectId, DateTime createdAt, DateTime? updatedAt,@JsonKey(includeFromJson: false, includeToJson: false) bool? isSelected,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide
 });
 
 
@@ -648,7 +662,7 @@ class _$BoardShortModelCopyWithImpl<$Res>
 
 /// Create a copy of BoardShortModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? projectId = null,Object? createdAt = null,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? projectId = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isSelected = freezed,Object? isHide = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -656,7 +670,9 @@ as String,description: freezed == description ? _self.description : description 
 as String?,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,isSelected: freezed == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool?,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -741,10 +757,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isSelected, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BoardShortModel() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt,_that.isSelected,_that.isHide);case _:
   return orElse();
 
 }
@@ -762,10 +778,10 @@ return $default(_that.id,_that.name,_that.description,_that.projectId,_that.crea
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isSelected, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide)  $default,) {final _that = this;
 switch (_that) {
 case _BoardShortModel():
-return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt,_that.isSelected,_that.isHide);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -782,10 +798,10 @@ return $default(_that.id,_that.name,_that.description,_that.projectId,_that.crea
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  String projectId,  DateTime createdAt,  DateTime? updatedAt, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isSelected, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isHide)?  $default,) {final _that = this;
 switch (_that) {
 case _BoardShortModel() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.description,_that.projectId,_that.createdAt,_that.updatedAt,_that.isSelected,_that.isHide);case _:
   return null;
 
 }
@@ -797,7 +813,7 @@ return $default(_that.id,_that.name,_that.description,_that.projectId,_that.crea
 @JsonSerializable()
 
 class _BoardShortModel implements BoardShortModel {
-  const _BoardShortModel({required this.id, required this.name, this.description, required this.projectId, required this.createdAt, this.updatedAt});
+  const _BoardShortModel({required this.id, required this.name, this.description, required this.projectId, required this.createdAt, this.updatedAt, @JsonKey(includeFromJson: false, includeToJson: false) this.isSelected = false, @JsonKey(includeFromJson: false, includeToJson: false) this.isHide = false});
   factory _BoardShortModel.fromJson(Map<String, dynamic> json) => _$BoardShortModelFromJson(json);
 
 @override final  String id;
@@ -806,6 +822,8 @@ class _BoardShortModel implements BoardShortModel {
 @override final  String projectId;
 @override final  DateTime createdAt;
 @override final  DateTime? updatedAt;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isSelected;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isHide;
 
 /// Create a copy of BoardShortModel
 /// with the given fields replaced by the non-null parameter values.
@@ -820,16 +838,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BoardShortModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BoardShortModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected)&&(identical(other.isHide, isHide) || other.isHide == isHide));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,projectId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,projectId,createdAt,updatedAt,isSelected,isHide);
 
 @override
 String toString() {
-  return 'BoardShortModel(id: $id, name: $name, description: $description, projectId: $projectId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'BoardShortModel(id: $id, name: $name, description: $description, projectId: $projectId, createdAt: $createdAt, updatedAt: $updatedAt, isSelected: $isSelected, isHide: $isHide)';
 }
 
 
@@ -840,7 +858,7 @@ abstract mixin class _$BoardShortModelCopyWith<$Res> implements $BoardShortModel
   factory _$BoardShortModelCopyWith(_BoardShortModel value, $Res Function(_BoardShortModel) _then) = __$BoardShortModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? description, String projectId, DateTime createdAt, DateTime? updatedAt
+ String id, String name, String? description, String projectId, DateTime createdAt, DateTime? updatedAt,@JsonKey(includeFromJson: false, includeToJson: false) bool? isSelected,@JsonKey(includeFromJson: false, includeToJson: false) bool? isHide
 });
 
 
@@ -857,7 +875,7 @@ class __$BoardShortModelCopyWithImpl<$Res>
 
 /// Create a copy of BoardShortModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? projectId = null,Object? createdAt = null,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? projectId = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isSelected = freezed,Object? isHide = freezed,}) {
   return _then(_BoardShortModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -865,7 +883,9 @@ as String,description: freezed == description ? _self.description : description 
 as String?,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,isSelected: freezed == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool?,isHide: freezed == isHide ? _self.isHide : isHide // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

@@ -17,7 +17,11 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WorkspacesMenuCubit(workspacesRepository: getIt<WorkspacesRepository>()),
+      create: (context) => WorkspacesMenuCubit(
+        menuHiddenMenuHiveRepository: getIt<MenuHiddenMenuHiveRepository>(),
+        workspacesRepository: getIt<WorkspacesRepository>(),
+        reorderableHiveRepository: getIt<ReorderableHiveRepository>(),
+      ),
       child: Material(
         color: Colors.transparent,
         child: Container(

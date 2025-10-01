@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:dev_note/core/data_source/dio_client.dart';
+import 'package:dev_note/core/data_client/dio_client.dart';
 import 'package:dev_note/core/utils/di.dart';
 import 'package:dev_note/services/auth/auth_service.dart';
 import 'package:equatable/equatable.dart';

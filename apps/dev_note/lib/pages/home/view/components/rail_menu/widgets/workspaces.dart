@@ -2,13 +2,13 @@ import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_board_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/add_project_dialog.dart';
+import 'package:dev_note/pages/home/view/components/rail_menu/widgets/delete_project_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/delete_works_pace_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_project_dialog.dart';
 import 'package:dev_note/pages/home/view/components/rail_menu/widgets/edit_workspace_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:p_repositories/repositories.dart';
 import 'package:p_shared_ui/p_shared_ui.dart';
 import 'package:p_utils/p_utils.dart';
@@ -19,24 +19,11 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 /// This widget renders three nested reorderable lists with lightweight
 /// expansion state kept locally for UX responsiveness. It uses small, focused
 /// sub-widgets for readability and performance.
-class Workspaces extends HookWidget {
+class Workspaces extends StatelessWidget {
   const Workspaces({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Track expanded nodes by id (prefix with type to avoid clashes)
-    final expanded = useState<Set<String>>(<String>{});
-    bool isExpanded(String id) => expanded.value.contains(id);
-    void toggleExpanded(String id) {
-      final set = Set<String>.from(expanded.value);
-      if (set.contains(id)) {
-        set.remove(id);
-      } else {
-        set.add(id);
-      }
-      expanded.value = set;
-    }
-
     // No side-effects are handled here, so BlocBuilder is sufficient.
     return BlocBuilder<WorkspacesMenuCubit, WorkspacesMenuState>(
       builder: (context, state) {
@@ -45,8 +32,42 @@ class Workspaces extends HookWidget {
           WorkspacesMenuLoading(:final oldStateWorkspaces) => oldStateWorkspaces,
           _ => null,
         };
+        final isShowingHidden = switch (state) {
+          WorkspacesMenuSuccess(:final isShowingHidden) => isShowingHidden,
+          _ => false,
+        };
+
+        // Determine if everything is hidden. Only true when we have workspaces
+        // and for every workspace the workspace itself is hidden and all of its
+        // projects are hidden as well. Treat `null` isHide as false (not hidden).
+        final isAllHidden =
+            workspaces != null &&
+            workspaces.isNotEmpty &&
+            workspaces.every((workspace) {
+              final wsHidden = workspace.isHide ?? false;
+
+              return wsHidden;
+            });
+
         if (workspaces != null) {
+          if (workspaces.isEmpty) {
+            return Center(
+              child: Text(
+                'Dodaj swój pierwszy workspace',
+                style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
+              ),
+            );
+          }
+          if (isAllHidden && (!isShowingHidden)) {
+            return Center(
+              child: Text(
+                "Brak widocznych workspace'ów",
+                style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
+              ),
+            );
+          }
           return ReorderableListView.builder(
+            key: const ValueKey('workspaces_list'),
             buildDefaultDragHandles: false,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -59,113 +80,134 @@ class Workspaces extends HookWidget {
             },
             itemBuilder: (context, index) {
               final workspace = workspaces[index];
-              return ReorderableDragStartListener(
-                index: index,
-                key: ValueKey('workspace_${workspace.id}'),
-                child: Card(
-                  margin: const EdgeInsets.symmetric(vertical: Sizes.p2),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Sizes.p8),
-                    side: BorderSide(color: context.colorScheme.outlineVariant.withAlpha(60)),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                    child: ExpansionTile(
-                      visualDensity: VisualDensity.compact,
-                      initiallyExpanded: isExpanded('ws:${workspace.id}'),
-                      onExpansionChanged: (_) => toggleExpanded('ws:${workspace.id}'),
-                      tilePadding: const EdgeInsets.symmetric(
-                        horizontal: Sizes.p8,
-                      ),
-                      leading: CircleAvatar(
-                        radius: 12,
-                        backgroundColor: workspace.primaryColor.toFlutterColor(),
-                        child: Icon(workspace.icon.icon, size: Sizes.p12, color: Colors.white),
-                      ),
-                      title: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              workspace.name,
-                              style: context.textTheme.bodyLarge,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          CustomMenuPopup(
-                            menus: [
-                              CustomMenuOverlay(
-                                title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.workspace_title.tr()}',
-                                icon: PhosphorIcons.pencil(),
-                                noodle: (context, animationStatus, close) =>
-                                    EditWorkspaceWidget(workspace: workspace, closeCallback: close),
-                              ),
-                              CustomMenuOverlay(
-                                title: LocaleKeys.messages_workspaceDeleteTitle.tr(),
-                                icon: PhosphorIcons.trash(),
-                                iconColor: Colors.red,
-                                onTap: () async {
-                                  await showDialog<void>(
-                                    context: context,
-                                    builder: (_) {
-                                      return BlocProvider.value(
-                                        value: context.read<WorkspacesMenuCubit>(),
-                                        child: DeleteWorksPaceDialog(workspace: workspace),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      childrenPadding: const EdgeInsets.fromLTRB(Sizes.p12, 0, Sizes.p12, 0),
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              if ((workspace.isHide ?? false) && (!isShowingHidden)) {
+                return SizedBox(key: ValueKey('workspace_placeholder_${workspace.id}'));
+              } else {
+                return ReorderableDragStartListener(
+                  index: index,
+                  key: ValueKey('workspace_${workspace.id}'),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(vertical: Sizes.p2),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Sizes.p8),
+                      side: BorderSide(color: context.colorScheme.outlineVariant.withAlpha(60)),
+                    ),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        visualDensity: VisualDensity.compact,
+                        initiallyExpanded: workspace.isExpanded ?? false,
+                        onExpansionChanged: (isExpanded) {
+                          context.read<WorkspacesMenuCubit>().toggleWorkspaceExpansion(
+                            workspaceId: workspace.id,
+                            isExpanded: isExpanded,
+                          );
+                        },
+                        tilePadding: const EdgeInsets.symmetric(
+                          horizontal: Sizes.p8,
+                        ),
+                        leading: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: workspace.primaryColor.toFlutterColor(),
+                          child: Icon(workspace.icon.icon, size: Sizes.p12, color: Colors.white),
+                        ),
+                        title: Row(
                           children: [
-                            _SectionLabel(label: LocaleKeys.labels_projects.tr()),
-                            CustomPopup(
-                              key: ValueKey('add_project_to_${workspace.id}'),
-                              width: 500,
-                              content: (closePopup) {
-                                return BlocProvider.value(
-                                  value: context.read<WorkspacesMenuCubit>(),
-                                  child: AddProjectDialog(closePopup: closePopup, workspaceId: workspace.id),
-                                );
-                              },
-                              icon: PhosphorIcons.plus(),
-                              iconSize: Sizes.p20,
-                              iconColor: context.colorScheme.primary,
+                            Expanded(
+                              child: Text(
+                                workspace.name,
+                                style: context.textTheme.bodyLarge,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            CustomMenuPopup(
+                              menus: [
+                                CustomMenuOverlay(
+                                  title: '${LocaleKeys.common_edit.tr()} ${LocaleKeys.workspace_title.tr()}',
+                                  icon: PhosphorIcons.pencil(),
+                                  noodle: (context, animationStatus, close) =>
+                                      EditWorkspaceWidget(workspace: workspace, closeCallback: close),
+                                ),
+                                CustomMenuOverlay(
+                                  title: LocaleKeys.messages_workspaceDeleteTitle.tr(),
+                                  icon: PhosphorIcons.trash(),
+                                  iconColor: Colors.red,
+                                  onTap: () async {
+                                    await showDialog<void>(
+                                      context: context,
+                                      builder: (_) {
+                                        return BlocProvider.value(
+                                          value: context.read<WorkspacesMenuCubit>(),
+                                          child: DeleteWorksPaceDialog(workspace: workspace),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                CustomMenuOverlay(
+                                  title: (workspace.isHide ?? false)
+                                      ? LocaleKeys.messages_workspaceUnhideTitle.tr()
+                                      : LocaleKeys.messages_workspaceHideTitle.tr(),
+                                  icon: (workspace.isHide ?? false) ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
+                                  onTap: () {
+                                    context.read<WorkspacesMenuCubit>().toggleWorkspaceVisibility(
+                                      workspaceId: workspace.id,
+                                      isHide: !(workspace.isHide ?? false),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        _ProjectsList(
-                          workspace: workspace,
-                          expandedSet: expanded.value,
-                          toggleExpanded: toggleExpanded,
-                          onReorderProjects: (oldIndex, newIndex) {
-                            context.read<WorkspacesMenuCubit>().reorderProjects(
-                              workspaceId: workspace.id,
-                              oldIndex: oldIndex,
-                              newIndex: newIndex,
-                            );
-                          },
-                          onReorderBoards: (projectId, oldIndex, newIndex) {
-                            context.read<WorkspacesMenuCubit>().reorderBoards(
-                              workspaceId: workspace.id,
-                              projectId: projectId,
-                              oldIndex: oldIndex,
-                              newIndex: newIndex,
-                            );
-                          },
-                        ),
-                      ],
+                        childrenPadding: const EdgeInsets.fromLTRB(Sizes.p12, 0, Sizes.p12, 0),
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _SectionLabel(label: LocaleKeys.labels_projects.tr()),
+                              CustomPopup(
+                                key: ValueKey('add_project_to_${workspace.id}'),
+                                width: 500,
+                                content: (closePopup) {
+                                  return BlocProvider.value(
+                                    value: context.read<WorkspacesMenuCubit>(),
+                                    child: AddProjectDialog(closePopup: closePopup, workspaceId: workspace.id),
+                                  );
+                                },
+                                icon: PhosphorIcons.plus(),
+                                iconSize: Sizes.p20,
+                                iconColor: context.colorScheme.primary,
+                              ),
+                            ],
+                          ),
+                          _ProjectsList(
+                            isShowingHidden: isShowingHidden,
+                            workspace: workspace,
+                            onReorderProjects: (oldIndex, newIndex) {
+                              context.read<WorkspacesMenuCubit>().reorderProjects(
+                                workspaceId: workspace.id,
+                                oldIndex: oldIndex,
+                                newIndex: newIndex,
+                              );
+                            },
+                            onReorderBoards: (projectId, oldIndex, newIndex) {
+                              context.read<WorkspacesMenuCubit>().reorderBoards(
+                                workspaceId: workspace.id,
+                                projectId: projectId,
+                                oldIndex: oldIndex,
+                                newIndex: newIndex,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              }
             },
           );
         } else {
@@ -181,15 +223,13 @@ class _ProjectsList extends StatelessWidget {
     required this.workspace,
     required this.onReorderProjects,
     required this.onReorderBoards,
-    required this.expandedSet,
-    required this.toggleExpanded,
+    required this.isShowingHidden,
   });
 
   final WorkspacesModel workspace;
+  final bool isShowingHidden;
   final void Function(int oldIndex, int newIndex) onReorderProjects;
   final void Function(String projectId, int oldIndex, int newIndex) onReorderBoards;
-  final Set<String> expandedSet;
-  final void Function(String id) toggleExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -202,6 +242,9 @@ class _ProjectsList extends StatelessWidget {
       proxyDecorator: (child, index, animation) => child,
       itemBuilder: (context, index) {
         final project = workspace.projects[index];
+        if ((project.isHide ?? false) && (!isShowingHidden)) {
+          return SizedBox(key: ValueKey('project_placeholder_${project.id}'));
+        }
         return ReorderableDragStartListener(
           index: index,
           key: ValueKey('project_${project.id}'),
@@ -211,8 +254,14 @@ class _ProjectsList extends StatelessWidget {
               data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
                 dense: true,
-                initiallyExpanded: expandedSet.contains('pr:${project.id}'),
-                onExpansionChanged: (_) => toggleExpanded('pr:${project.id}'),
+                initiallyExpanded: project.isExpanded ?? false,
+                onExpansionChanged: (isExpanded) {
+                  context.read<WorkspacesMenuCubit>().toggleProjectExpansion(
+                    workspaceId: workspace.id,
+                    projectId: project.id,
+                    isExpanded: isExpanded,
+                  );
+                },
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.p8)),
                 tilePadding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
                 leading: CircleAvatar(
@@ -240,11 +289,36 @@ class _ProjectsList extends StatelessWidget {
                           ),
                         ),
                         CustomMenuOverlay(
+                          title: project.isHide ?? false
+                              ? LocaleKeys.messages_projectUnhideTitle.tr()
+                              : LocaleKeys.messages_projectHideTitle.tr(),
+                          icon: project.isHide ?? false ? PhosphorIcons.eye() : PhosphorIcons.eyeSlash(),
+                          onTap: () {
+                            context.read<WorkspacesMenuCubit>().toggleProjectVisibility(
+                              workspaceId: workspace.id,
+                              projectId: project.id,
+                              isHide: !(project.isHide ?? false),
+                            );
+                          },
+                        ),
+                        CustomMenuOverlay(
                           title: '${LocaleKeys.common_delete.tr()} ${LocaleKeys.project_title.tr()}',
                           icon: PhosphorIcons.trash(),
                           iconColor: Colors.red,
-                          onTap: () {
-                            // TODO(dev-note): Implement project deletion.
+                          onTap: () async {
+                            await showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return BlocProvider.value(
+                                  value: context.read<WorkspacesMenuCubit>(),
+                                  child: DeleteProjectDialog(
+                                    workspaceId: workspace.id,
+                                    projectId: project.id,
+                                    projectName: project.name,
+                                  ),
+                                );
+                              },
+                            );
                           },
                         ),
                       ],
@@ -275,6 +349,7 @@ class _ProjectsList extends StatelessWidget {
                     ],
                   ),
                   _BoardsList(
+                    isShowingHidden: isShowingHidden,
                     project: project,
                     onReorder: (oldIndex, newIndex) => onReorderBoards(project.id, oldIndex, newIndex),
                   ),
@@ -292,14 +367,19 @@ class _BoardsList extends StatelessWidget {
   const _BoardsList({
     required this.project,
     required this.onReorder,
+    required this.isShowingHidden,
   });
 
   final ProjectModel project;
   final void Function(int oldIndex, int newIndex) onReorder;
+  final bool isShowingHidden;
 
   @override
   Widget build(BuildContext context) {
     if (project.boards.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    if ((project.isHide ?? false) && (!isShowingHidden)) {
       return const SizedBox.shrink();
     }
 

@@ -53,6 +53,10 @@ class HiveHelper {
   AdapterSpec<LoginRequest>(),
   AdapterSpec<LoginResponse>(),
   AdapterSpec<AuthUserResponse>(),
+  AdapterSpec<ReorderableList>(),
+  AdapterSpec<ReorderableWorkspace>(),
+  AdapterSpec<ReorderableProject>(),
+  AdapterSpec<ReorderableBoard>(),
 ])
 // To jes to do generacji plików *.g.dart nie usuwać
 // ignore: unused_element

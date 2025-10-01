@@ -50,7 +50,7 @@ class _ProjectsRepository implements ProjectsRepository {
   }
 
   @override
-  Future<MessageResponse> editProject({
+  Future<void> editProject({
     required String workspaceId,
     required String projectId,
     required EditProjectRequest createWorkspaceModel,
@@ -60,7 +60,7 @@ class _ProjectsRepository implements ProjectsRepository {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(createWorkspaceModel.toJson());
-    final _options = _setStreamType<MessageResponse>(
+    final _options = _setStreamType<void>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -70,15 +70,7 @@ class _ProjectsRepository implements ProjectsRepository {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late MessageResponse _value;
-    try {
-      _value = MessageResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    await _dio.fetch<void>(_options);
   }
 
   @override
