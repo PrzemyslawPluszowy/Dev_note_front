@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dev_note/core/utils/di.dart';
-import 'package:dev_note/pages/home/view/components/header/main_header_widget.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/rail_container.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/rail_menu_widget.dart';
+import 'package:dev_note/pages/navigations/view/components/header/main_header_widget.dart';
+import 'package:dev_note/pages/navigations/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
+import 'package:dev_note/pages/navigations/view/components/rail_menu/rail_container.dart';
+import 'package:dev_note/pages/navigations/view/components/rail_menu/rail_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +11,8 @@ import 'package:p_repositories/repositories.dart';
 import 'package:p_utils/p_utils.dart';
 
 @RoutePage(name: 'rail_navigation')
-class BoardPage extends StatelessWidget {
-  const BoardPage({super.key});
+class NavigationWidget extends StatelessWidget {
+  const NavigationWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,46 +55,22 @@ class BoardPage extends StatelessWidget {
                 child: Column(
                   children: [
                     const MainHeaderWidget().animate().slideY(duration: 500.ms).fadeIn(duration: 500.ms),
-                    const MainScreen(),
+                    Expanded(
+                      // Let the AutoRoute system inject the child route (Main) here.
+                      // NavigationWidget is the page for Rail_navigation; its AutoRouter
+                      // will render the Main route (which in turn will build MainScreen
+                      // with its own AutoRouter for board/:boardId children).
+                      child: const AutoRouter()
+                          .animate()
+                          .slideY(duration: 500.ms, begin: 0.3, end: 0)
+                          .fadeIn(duration: 500.ms),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  const MainScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ColoredBox(
-        color: context.colorScheme.primary.withAlpha(190),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(Sizes.p8),
-              bottomRight: Radius.circular(Sizes.p8),
-            ),
-            color: context.colorScheme.surface,
-            boxShadow: [
-              BoxShadow(
-                color: context.colorScheme.shadow.withValues(alpha: .3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-        ).animate().slideY(duration: 500.ms, begin: 0.3, end: 0).fadeIn(duration: 500.ms),
       ),
     );
   }

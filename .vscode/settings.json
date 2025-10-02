@@ -12,7 +12,7 @@
         ".dart_tool": false,
         "**/scripts": false,
         "scripts": false,
-        "apps/dev_note/.idea": false,
+        "apps/dev_note/.idea": true,
         "**/.idea": false,
         "apps/dev_note/*.*": false,
         ".idea": false,

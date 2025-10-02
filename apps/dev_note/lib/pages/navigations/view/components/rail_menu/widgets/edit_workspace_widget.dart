@@ -2,11 +2,10 @@ import 'package:dev_note/core/extensions/translation_api_exception.dart';
 import 'package:dev_note/core/gen/locale_keys.g.dart';
 import 'package:dev_note/core/shared/widgets/custom_error_widget.dart';
 import 'package:dev_note/core/utils/di.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/cubit/edit_project_cubit.dart';
-import 'package:dev_note/pages/home/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
+import 'package:dev_note/pages/navigations/view/components/rail_menu/cubit/edit_workspace_cubit.dart';
+import 'package:dev_note/pages/navigations/view/components/rail_menu/cubit/workspaces_menu_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:p_repositories/repositories.dart';
@@ -14,37 +13,35 @@ import 'package:p_shared_ui/p_shared_ui.dart';
 import 'package:p_utils/p_utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class EditProjectDialog extends HookWidget {
-  const EditProjectDialog({
-    required this.projectModel,
+class EditWorkspaceWidget extends HookWidget {
+  const EditWorkspaceWidget({
+    required this.workspace,
     required this.closeCallback,
-    required this.workspaceId,
     super.key,
   });
 
-  final ProjectModel projectModel;
-  final String workspaceId;
+  final WorkspacesModel workspace;
   final void Function() closeCallback;
 
   @override
   Widget build(BuildContext context) {
-    final editProjectCubit = useBloc(() => EditProjectCubit(projectsRepository: getIt<ProjectsRepository>()));
+    final editWorkspaceCubit = useBloc(() => EditWorkspaceCubit(getIt<WorkspacesRepository>()));
     final FormGroup formBuilder = useMemoized(
       () => FormGroup({
         'name': FormControl<String>(
-          value: projectModel.name,
+          value: workspace.name,
           validators: [
             Validators.required,
             Validators.minLength(3),
           ],
         ),
         'description': FormControl<String>(
-          value: projectModel.description,
+          value: workspace.description,
         ),
       }),
     );
-    final selectedColor = useValueNotifier<ApiColorScheme?>(projectModel.primaryColor);
-    final selectedIcon = useValueNotifier<ApiPhosphorIcons?>(projectModel.icon);
+    final selectedColor = useValueNotifier<ApiColorScheme?>(workspace.primaryColor);
+    final selectedIcon = useValueNotifier<ApiPhosphorIcons?>(workspace.icon);
 
     return Container(
       margin: const EdgeInsets.only(left: Sizes.p8),
@@ -94,14 +91,14 @@ class EditProjectDialog extends HookWidget {
                   ),
                   gapH8,
                   CustomColorSelector(
-                    initialColor: projectModel.primaryColor,
+                    initialColor: workspace.primaryColor,
                     onColorSelected: (color) {
                       selectedColor.value = color;
                     },
                   ),
                   gapH16,
                   IconSelector(
-                    initialIcon: projectModel.icon,
+                    initialIcon: workspace.icon,
                     onIconSelected: (icon) {
                       selectedIcon.value = icon;
                     },
@@ -109,15 +106,15 @@ class EditProjectDialog extends HookWidget {
                   gapH8,
                   AnimatedSize(
                     alignment: Alignment.topLeft,
-                    duration: 220.ms,
+                    duration: const Duration(milliseconds: 220),
                     curve: Curves.easeInOut,
-                    child: BlocConsumer<EditProjectCubit, EditProjectState>(
-                      bloc: editProjectCubit,
+                    child: BlocConsumer<EditWorkspaceCubit, EditWorkspaceState>(
+                      bloc: editWorkspaceCubit,
                       listener: (_, state) async {
-                        if (state is EditProjectSuccess) {
+                        if (state is EditWorkspaceSuccess) {
                           WebToast.showTop(
                             toast: ToastData(
-                              message: LocaleKeys.messages_projectUpdated.tr(namedArgs: {'name': projectModel.name}),
+                              message: LocaleKeys.messages_workspaceUpdated.tr(namedArgs: {'name': workspace.name}),
                               type: WebToastType.success,
                             ),
                             context: context,
@@ -125,7 +122,7 @@ class EditProjectDialog extends HookWidget {
                           await context.read<WorkspacesMenuCubit>().fetchWorkspaces(showLoading: false);
                           closeCallback();
                         }
-                        if (state is EditProjectFailure) {
+                        if (state is EditWorkspaceFailure) {
                           if (context.mounted) {
                             WebToast.showTop(
                               toast: ToastData(
@@ -138,7 +135,7 @@ class EditProjectDialog extends HookWidget {
                         }
                       },
                       builder: (context, state) {
-                        if (state case EditProjectFailure(:final error)) {
+                        if (state case EditWorkspaceFailure(:final error)) {
                           return CustomErrorWidget(exception: error, width: double.infinity);
                         }
                         return const SizedBox.shrink();
@@ -154,9 +151,8 @@ class EditProjectDialog extends HookWidget {
           LoadingButton(
             onPressed: () async {
               if (formBuilder.valid) {
-                await editProjectCubit.editProject(
-                  projectId: projectModel.id,
-                  workspaceId: workspaceId,
+                await editWorkspaceCubit.editWorkspace(
+                  workspaceId: workspace.id,
                   name: formBuilder.control('name').value as String,
                   description: formBuilder.control('description').value as String?,
                   icon: selectedIcon.value,

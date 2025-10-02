@@ -9,25 +9,28 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i8;
+import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:dev_note/pages/auth/view/auth_wraper.dart' as _i1;
 import 'package:dev_note/pages/auth/view/forgot_password.dart' as _i3;
 import 'package:dev_note/pages/auth/view/login_page.dart' as _i4;
-import 'package:dev_note/pages/auth/view/register_page.dart' as _i5;
-import 'package:dev_note/pages/auth/view/request_reset_code.dart' as _i6;
-import 'package:dev_note/pages/auth/view/resend_activation_link.dart' as _i7;
-import 'package:dev_note/pages/home/view/board_page.dart' as _i2;
-import 'package:flutter/material.dart' as _i9;
+import 'package:dev_note/pages/auth/view/register_page.dart' as _i8;
+import 'package:dev_note/pages/auth/view/request_reset_code.dart' as _i9;
+import 'package:dev_note/pages/auth/view/resend_activation_link.dart' as _i10;
+import 'package:dev_note/pages/board/board_page.dart' as _i2;
+import 'package:dev_note/pages/navigations/view/main_screen.dart' as _i6;
+import 'package:dev_note/pages/navigations/view/navigation_widget.dart' as _i7;
+import 'package:dev_note/pages/start_page/main_child_placeholder.dart' as _i5;
+import 'package:flutter/material.dart' as _i12;
 
 /// generated route for
 /// [_i1.AuthWrapper]
-class Auth_wrapper extends _i8.PageRouteInfo<void> {
-  const Auth_wrapper({List<_i8.PageRouteInfo>? children})
+class Auth_wrapper extends _i11.PageRouteInfo<void> {
+  const Auth_wrapper({List<_i11.PageRouteInfo>? children})
     : super(Auth_wrapper.name, initialChildren: children);
 
   static const String name = 'Auth_wrapper';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       return const _i1.AuthWrapper();
@@ -37,29 +40,64 @@ class Auth_wrapper extends _i8.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.BoardPage]
-class Rail_navigation extends _i8.PageRouteInfo<void> {
-  const Rail_navigation({List<_i8.PageRouteInfo>? children})
-    : super(Rail_navigation.name, initialChildren: children);
+class BoardRoute extends _i11.PageRouteInfo<BoardRouteArgs> {
+  BoardRoute({
+    required String boardId,
+    _i12.Key? key,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
+         BoardRoute.name,
+         args: BoardRouteArgs(boardId: boardId, key: key),
+         rawPathParams: {'boardId': boardId},
+         initialChildren: children,
+       );
 
-  static const String name = 'Rail_navigation';
+  static const String name = 'BoardRoute';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i2.BoardPage();
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<BoardRouteArgs>(
+        orElse: () => BoardRouteArgs(boardId: pathParams.getString('boardId')),
+      );
+      return _i2.BoardPage(boardId: args.boardId, key: args.key);
     },
   );
 }
 
+class BoardRouteArgs {
+  const BoardRouteArgs({required this.boardId, this.key});
+
+  final String boardId;
+
+  final _i12.Key? key;
+
+  @override
+  String toString() {
+    return 'BoardRouteArgs{boardId: $boardId, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! BoardRouteArgs) return false;
+    return boardId == other.boardId && key == other.key;
+  }
+
+  @override
+  int get hashCode => boardId.hashCode ^ key.hashCode;
+}
+
 /// generated route for
 /// [_i3.ForgotPassword]
-class ForgotPassword extends _i8.PageRouteInfo<void> {
-  const ForgotPassword({List<_i8.PageRouteInfo>? children})
+class ForgotPassword extends _i11.PageRouteInfo<void> {
+  const ForgotPassword({List<_i11.PageRouteInfo>? children})
     : super(ForgotPassword.name, initialChildren: children);
 
   static const String name = 'ForgotPassword';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       return const _i3.ForgotPassword();
@@ -69,8 +107,8 @@ class ForgotPassword extends _i8.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.LoginPageContent]
-class Login extends _i8.PageRouteInfo<LoginArgs> {
-  Login({_i9.Key? key, List<_i8.PageRouteInfo>? children})
+class Login extends _i11.PageRouteInfo<LoginArgs> {
+  Login({_i12.Key? key, List<_i11.PageRouteInfo>? children})
     : super(
         Login.name,
         args: LoginArgs(key: key),
@@ -79,7 +117,7 @@ class Login extends _i8.PageRouteInfo<LoginArgs> {
 
   static const String name = 'Login';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<LoginArgs>(orElse: () => const LoginArgs());
@@ -91,7 +129,7 @@ class Login extends _i8.PageRouteInfo<LoginArgs> {
 class LoginArgs {
   const LoginArgs({this.key});
 
-  final _i9.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -110,9 +148,85 @@ class LoginArgs {
 }
 
 /// generated route for
-/// [_i5.RegisterPage]
-class Register extends _i8.PageRouteInfo<RegisterArgs> {
-  Register({_i9.Key? key, List<_i8.PageRouteInfo>? children})
+/// [_i5.MainChildPlaceholder]
+class MainChildPlaceholder extends _i11.PageRouteInfo<void> {
+  const MainChildPlaceholder({List<_i11.PageRouteInfo>? children})
+    : super(MainChildPlaceholder.name, initialChildren: children);
+
+  static const String name = 'MainChildPlaceholder';
+
+  static _i11.PageInfo page = _i11.PageInfo(
+    name,
+    builder: (data) {
+      return const _i5.MainChildPlaceholder();
+    },
+  );
+}
+
+/// generated route for
+/// [_i6.MainScreen]
+class Main extends _i11.PageRouteInfo<MainArgs> {
+  Main({_i12.Widget? child, _i12.Key? key, List<_i11.PageRouteInfo>? children})
+    : super(
+        Main.name,
+        args: MainArgs(child: child, key: key),
+        initialChildren: children,
+      );
+
+  static const String name = 'Main';
+
+  static _i11.PageInfo page = _i11.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<MainArgs>(orElse: () => const MainArgs());
+      return _i6.MainScreen(child: args.child, key: args.key);
+    },
+  );
+}
+
+class MainArgs {
+  const MainArgs({this.child, this.key});
+
+  final _i12.Widget? child;
+
+  final _i12.Key? key;
+
+  @override
+  String toString() {
+    return 'MainArgs{child: $child, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! MainArgs) return false;
+    return child == other.child && key == other.key;
+  }
+
+  @override
+  int get hashCode => child.hashCode ^ key.hashCode;
+}
+
+/// generated route for
+/// [_i7.NavigationWidget]
+class Rail_navigation extends _i11.PageRouteInfo<void> {
+  const Rail_navigation({List<_i11.PageRouteInfo>? children})
+    : super(Rail_navigation.name, initialChildren: children);
+
+  static const String name = 'Rail_navigation';
+
+  static _i11.PageInfo page = _i11.PageInfo(
+    name,
+    builder: (data) {
+      return const _i7.NavigationWidget();
+    },
+  );
+}
+
+/// generated route for
+/// [_i8.RegisterPage]
+class Register extends _i11.PageRouteInfo<RegisterArgs> {
+  Register({_i12.Key? key, List<_i11.PageRouteInfo>? children})
     : super(
         Register.name,
         args: RegisterArgs(key: key),
@@ -121,13 +235,13 @@ class Register extends _i8.PageRouteInfo<RegisterArgs> {
 
   static const String name = 'Register';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<RegisterArgs>(
         orElse: () => const RegisterArgs(),
       );
-      return _i5.RegisterPage(key: args.key);
+      return _i8.RegisterPage(key: args.key);
     },
   );
 }
@@ -135,7 +249,7 @@ class Register extends _i8.PageRouteInfo<RegisterArgs> {
 class RegisterArgs {
   const RegisterArgs({this.key});
 
-  final _i9.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -154,9 +268,9 @@ class RegisterArgs {
 }
 
 /// generated route for
-/// [_i6.RequestResetCode]
-class RequestResetCode extends _i8.PageRouteInfo<RequestResetCodeArgs> {
-  RequestResetCode({_i9.Key? key, List<_i8.PageRouteInfo>? children})
+/// [_i9.RequestResetCode]
+class RequestResetCode extends _i11.PageRouteInfo<RequestResetCodeArgs> {
+  RequestResetCode({_i12.Key? key, List<_i11.PageRouteInfo>? children})
     : super(
         RequestResetCode.name,
         args: RequestResetCodeArgs(key: key),
@@ -165,13 +279,13 @@ class RequestResetCode extends _i8.PageRouteInfo<RequestResetCodeArgs> {
 
   static const String name = 'RequestResetCode';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<RequestResetCodeArgs>(
         orElse: () => const RequestResetCodeArgs(),
       );
-      return _i6.RequestResetCode(key: args.key);
+      return _i9.RequestResetCode(key: args.key);
     },
   );
 }
@@ -179,7 +293,7 @@ class RequestResetCode extends _i8.PageRouteInfo<RequestResetCodeArgs> {
 class RequestResetCodeArgs {
   const RequestResetCodeArgs({this.key});
 
-  final _i9.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -198,10 +312,10 @@ class RequestResetCodeArgs {
 }
 
 /// generated route for
-/// [_i7.ResendActivationLink]
+/// [_i10.ResendActivationLink]
 class ResendActivationLinkRoute
-    extends _i8.PageRouteInfo<ResendActivationLinkRouteArgs> {
-  ResendActivationLinkRoute({_i9.Key? key, List<_i8.PageRouteInfo>? children})
+    extends _i11.PageRouteInfo<ResendActivationLinkRouteArgs> {
+  ResendActivationLinkRoute({_i12.Key? key, List<_i11.PageRouteInfo>? children})
     : super(
         ResendActivationLinkRoute.name,
         args: ResendActivationLinkRouteArgs(key: key),
@@ -210,13 +324,13 @@ class ResendActivationLinkRoute
 
   static const String name = 'ResendActivationLinkRoute';
 
-  static _i8.PageInfo page = _i8.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ResendActivationLinkRouteArgs>(
         orElse: () => const ResendActivationLinkRouteArgs(),
       );
-      return _i7.ResendActivationLink(key: args.key);
+      return _i10.ResendActivationLink(key: args.key);
     },
   );
 }
@@ -224,7 +338,7 @@ class ResendActivationLinkRoute
 class ResendActivationLinkRouteArgs {
   const ResendActivationLinkRouteArgs({this.key});
 
-  final _i9.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
