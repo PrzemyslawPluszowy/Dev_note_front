@@ -289,9 +289,9 @@ class _MenuState extends State<_Menu> with SingleTickerProviderStateMixin {
   CustomMenuController? _hostController;
   late final AnimationController animationController;
   late final CurvedAnimation animation;
+
   bool get isSubmenu => MenuController.maybeOf(context) != null;
   AnimationStatus get animationStatus => animationController.status;
-
   @override
   void initState() {
     super.initState();
@@ -366,6 +366,116 @@ class _MenuState extends State<_Menu> with SingleTickerProviderStateMixin {
     unawaited(animationController.reverse().whenComplete(hideOverlay));
   }
 
+  /// Oblicza najlepszą pozycję dla menu, uwzględniając dostępne miejsce na ekranie.
+  Offset _calculateBestPosition(RawMenuOverlayInfo info, BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final anchorRect = info.anchorRect;
+
+    // Używamy stałych szacowanych wymiarów menu
+    // Te wartości można dostosować w zależności od potrzeb
+    const menuHeight = 250.0;
+    const menuWidth = 250.0;
+
+    // Positioning calculations (no debug logging in production).
+
+    if (isSubmenu) {
+      // SUBMENU (noodle) - pojawia się z boku elementu menu rodzica
+
+      // === POZYCJONOWANIE POZIOME (prawo/lewo) ===
+      final spaceRight = screenSize.width - anchorRect.right;
+      final spaceLeft = anchorRect.left;
+
+      double left;
+
+      // Wyświetlamy po prawej tylko jeśli jest wystarczająco miejsca
+      if (spaceRight >= menuWidth) {
+        debugPrint('POZIOM: Wyświetlam PO PRAWEJ (wystarczająco miejsca)');
+        left = anchorRect.right;
+      } else if (spaceLeft >= menuWidth) {
+        debugPrint('POZIOM: Wyświetlam PO LEWEJ (wystarczająco miejsca)');
+        left = anchorRect.left - menuWidth;
+      } else if (spaceLeft > spaceRight) {
+        debugPrint('POZIOM: Wyświetlam PO LEWEJ (więcej miejsca)');
+        left = anchorRect.left - menuWidth;
+      } else {
+        debugPrint('POZIOM: Wyświetlam PO PRAWEJ (więcej miejsca lub równo)');
+        left = anchorRect.right;
+      }
+
+      // === POZYCJONOWANIE PIONOWE (dół/góra) ===
+      // Dla submenu: wyrównujemy do dolnej krawędzi elementu menu (rozwijanie w górę)
+      // aby zachować spójność z kierunkiem menu głównego
+      final spaceBelow = screenSize.height - anchorRect.bottom;
+      final spaceAbove = anchorRect.top;
+
+      double top;
+
+      // Jeśli jest więcej miejsca poniżej - wyrównaj do góry elementu (rozwijanie w dół)
+      // Jeśli jest więcej miejsca powyżej - wyrównaj submenu tak aby było wyżej (nie wyśrodkowane)
+      if (spaceBelow >= spaceAbove) {
+        top = anchorRect.top;
+      } else {
+        // Używamy offsetu 1.5x wysokości menu, aby stworzyć estetyczny odstęp
+        top = anchorRect.top - menuHeight * 1.5;
+      }
+
+      // Zabezpieczenie przed wyjściem poza ekran
+      if (top + menuHeight > screenSize.height) {
+        top = screenSize.height - menuHeight - 8;
+      }
+      if (top < 8) {
+        top = 8;
+      }
+
+      return Offset(left, top);
+    } else {
+      // MENU GŁÓWNE - pojawia się poniżej lub powyżej przycisku
+
+      // === POZYCJONOWANIE PIONOWE (dół/góra) ===
+      final spaceBelow = screenSize.height - anchorRect.bottom;
+      final spaceAbove = anchorRect.top;
+
+      double top;
+
+      if (spaceBelow >= menuHeight) {
+        // Wystarczająco miejsca poniżej - wyświetl pod przyciskiem
+
+        top = anchorRect.bottom;
+      } else if (spaceAbove >= menuHeight) {
+        // Wystarczająco miejsca powyżej - wyświetl nad przyciskiem
+        // Menu kończy się na dolnej krawędzi przycisku (nie górnej!)
+
+        top = anchorRect.bottom - menuHeight / 2 - 30;
+      } else if (spaceAbove > spaceBelow) {
+        // Więcej miejsca powyżej - wyświetl nad przyciskiem
+
+        top = anchorRect.bottom - menuHeight;
+        // Jeśli menu wychodzi poza górną krawędź, przytnij od góry
+        if (top < 8) {
+          top = 8;
+        }
+      } else {
+        // Więcej miejsca poniżej - wyświetl pod przyciskiem
+
+        top = anchorRect.bottom;
+        // Menu może być przycięte od dołu jeśli nie ma miejsca
+      }
+
+      // === POZYCJONOWANIE POZIOME (lewo/prawo) ===
+      double left = anchorRect.left;
+
+      // Sprawdź czy menu mieści się na ekranie w poziomie
+      if (left + menuWidth > screenSize.width) {
+        left = screenSize.width - menuWidth - 8;
+      }
+      if (left < 8) {
+        left = 8;
+      }
+
+      return Offset(left, top);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -375,10 +485,9 @@ class _MenuState extends State<_Menu> with SingleTickerProviderStateMixin {
         onOpenRequested: _handleMenuOpenRequest,
         onCloseRequested: _handleMenuCloseRequest,
         overlayBuilder: (BuildContext context, RawMenuOverlayInfo info) {
-          final position = isSubmenu
-              ? info.anchorRect.topRight
-              : info.anchorRect.bottomLeft;
+          final position = _calculateBestPosition(info, context);
           final colorScheme = ColorScheme.of(context);
+
           return Positioned(
             top: position.dy,
             left: position.dx,
