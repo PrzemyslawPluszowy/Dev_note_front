@@ -130,7 +130,7 @@ class WorkspaceItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SectionLabel(label: LocaleKeys.labels_projects.tr()),
-                          CustomPopup(
+                          CustomPopupWidget(
                             key: ValueKey('add_project_to_${workspace.id}'),
                             width: 500,
                             content: (closePopup) {

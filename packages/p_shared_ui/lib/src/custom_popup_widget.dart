@@ -5,8 +5,8 @@ import 'package:p_utils/p_utils.dart';
 
 enum Type { icon, text }
 
-class CustomPopup extends StatefulWidget {
-  const CustomPopup({
+class CustomPopupWidget extends StatefulWidget {
+  const CustomPopupWidget({
     required this.content,
     required this.icon,
     super.key,
@@ -46,10 +46,10 @@ class CustomPopup extends StatefulWidget {
   final double? height;
 
   @override
-  State<CustomPopup> createState() => _CustomPopupState();
+  State<CustomPopupWidget> createState() => _CustomPopupWidgetState();
 }
 
-class _CustomPopupState extends State<CustomPopup> {
+class _CustomPopupWidgetState extends State<CustomPopupWidget> {
   final GlobalKey _buttonKey = GlobalKey();
 
   /// Show the custom popup near the button

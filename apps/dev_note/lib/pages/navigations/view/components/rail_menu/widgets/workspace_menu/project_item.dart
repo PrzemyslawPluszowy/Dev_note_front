@@ -140,7 +140,7 @@ class ProjectItem extends StatelessWidget {
                         children: [
                           SectionLabel(label: LocaleKeys.labels_boards.tr()),
                           const Spacer(),
-                          CustomPopup(
+                          CustomPopupWidget(
                             width: 400,
                             content: (closePopup) => BlocProvider.value(
                               value: context.read<WorkspacesMenuCubit>(),

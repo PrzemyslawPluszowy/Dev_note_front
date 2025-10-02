@@ -95,7 +95,7 @@ class _WorkspacesLabel extends StatelessWidget {
         gapW8,
 
         // Dodaj workspace
-        CustomPopup(
+        CustomPopupWidget(
           width: 500,
 
           content: (closePopup) => BlocProvider.value(
