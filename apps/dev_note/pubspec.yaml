@@ -25,6 +25,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
+  drag_and_drop_lists: ^0.4.2
   easy_localization: ^3.0.8
   easy_localization_loader: ^2.0.2
 

@@ -135,6 +135,9 @@ class AppRouter extends RootStackRouter {
           page: Main.page,
           path: 'main',
           initial: true,
+          maintainState: false,
+          allowSnapshotting: false,
+          customRouteBuilder: _createFadeInRoute,
           children: [
             // Default empty child so Main always receives a non-null child when
             // it's created (prevents MainArgs null errors on initial navigation).
@@ -143,7 +146,8 @@ class AppRouter extends RootStackRouter {
               initial: true,
             ),
             // child route to show a specific board by id: /main/board/:boardId
-            AutoRoute(
+            CustomRoute<BoardRoute>(
+              customRouteBuilder: _createFadeInRoute,
               path: 'board/:boardId',
               page: BoardRoute.page,
             ),

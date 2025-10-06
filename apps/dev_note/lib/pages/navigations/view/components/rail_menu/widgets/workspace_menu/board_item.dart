@@ -81,12 +81,7 @@ class BoardItem extends StatelessWidget {
             onTap: () async {
               // Navigate to the board route
               // Note: ActiveBoardNotifier will be updated automatically by BoardPage.initState()
-              await AutoRouter.of(context).navigate(
-                Main(
-                  child: const AutoRouter(),
-                  children: [BoardRoute(boardId: board.id)],
-                ),
-              );
+              await context.router.push(BoardRoute(boardId: board.id));
             },
           ),
         );
