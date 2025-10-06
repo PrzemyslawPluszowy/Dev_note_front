@@ -10,4 +10,15 @@ abstract class BoardRepository {
 
   @POST('/boards/create')
   Future<void> createBoard(@Body() BoardCreateRequest request);
+
+  // /boards/{boardId}/full-data
+  @GET('/boards/{boardId}/full-data')
+  Future<BoardDataResponse> getBoardFullData(@Path('boardId') String boardId);
+
+  // /board-categories/{boardId}/reorder
+  @PUT('/board-categories/{boardId}/reorder')
+  Future<void> reorderBoardCategories(
+    @Path('boardId') String boardId,
+    @Body() BoardCategoryReorderRequest request,
+  );
 }

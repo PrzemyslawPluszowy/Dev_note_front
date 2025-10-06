@@ -26,6 +26,7 @@
         "bloc",
         "cupertino_icons",
         "dio",
+        "drag_and_drop_lists",
         "easy_localization",
         "easy_localization_loader",
         "envied",
@@ -900,6 +901,13 @@
         "intl",
         "path",
         "shared_preferences"
+      ]
+    },
+    {
+      "name": "drag_and_drop_lists",
+      "version": "0.4.2",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

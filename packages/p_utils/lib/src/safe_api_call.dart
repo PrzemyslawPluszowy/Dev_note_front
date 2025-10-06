@@ -33,11 +33,11 @@ class SafeApiCall {
       } else {
         throw const UnknownException();
       }
-    } catch (e) {
+    } catch (e, s) {
       if (e is ApiException) {
         rethrow;
       }
-      _logError('Unknown exception', e);
+      _logError('Unknown exception', '$e\nStack trace: $s');
       throw const UnknownException();
     }
   }

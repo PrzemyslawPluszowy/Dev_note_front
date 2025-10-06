@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'board_repository.dart';
+part of 'work_item_repository.dart';
 
 // dart format off
 
@@ -10,8 +10,8 @@ part of 'board_repository.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
-class _BoardRepository implements BoardRepository {
-  _BoardRepository(this._dio, {this.baseUrl, this.errorLogger});
+class _WorkItemRepository implements WorkItemRepository {
+  _WorkItemRepository(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -20,17 +20,17 @@ class _BoardRepository implements BoardRepository {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<void> createBoard(BoardCreateRequest request) async {
+  Future<void> createWorkItem(WorkItemCreate workItemCreate) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    _data.addAll(workItemCreate.toJson());
     final _options = _setStreamType<void>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/boards/create',
+            '/work-items',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -40,47 +40,20 @@ class _BoardRepository implements BoardRepository {
   }
 
   @override
-  Future<BoardDataResponse> getBoardFullData(String boardId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BoardDataResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/boards/${boardId}/full-data',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BoardDataResponse _value;
-    try {
-      _value = BoardDataResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<void> reorderBoardCategories(
-    String boardId,
-    BoardCategoryReorderRequest request,
+  Future<void> moveWorkItem(
+    String workItemId,
+    WorkItemReorder workItemReorder,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    _data.addAll(workItemReorder.toJson());
     final _options = _setStreamType<void>(
-      Options(method: 'PUT', headers: _headers, extra: _extra)
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/board-categories/${boardId}/reorder',
+            '/work-items/${workItemId}/move',
             queryParameters: queryParameters,
             data: _data,
           )
