@@ -1,4 +1,7 @@
 {
+    "github.copilot.advanced": {
+    "instructions": "/Users/przemyslawnowak/Desktop/dev/devnotedekstop/ai_rule.md"
+  },
     "files.exclude": {
         "**/.git": false,
         "**/.svn": false,
@@ -20,6 +23,7 @@
         "**/linux": false,
         "linux": false
     },
+    
     "explorerExclude.backup": {},
     "cSpell.words": [
         "odmontowaniu",

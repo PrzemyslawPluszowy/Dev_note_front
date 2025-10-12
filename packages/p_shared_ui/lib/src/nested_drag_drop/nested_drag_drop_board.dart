@@ -42,6 +42,7 @@ import 'package:flutter/material.dart';
 ///
 /// ## Opcjonalne parametry - Dekoracje
 /// - `itemHoverDecorationBuilder` - funkcja zwracająca dekorację dla elementu podczas hover (gdy przeciągany element jest nad nim)
+/// - `categoryHoverDecorationBuilder` - funkcja zwracająca dekorację dla kategorii podczas hover (gdy przeciągana kategoria jest nad nią)
 ///
 /// ## Przykład użycia
 /// ```dart
@@ -125,6 +126,7 @@ class NestedDragDropBoard<TCategory, TItem, TSubItem> extends StatefulWidget {
     required this.subItemDropPlaceholder,
     required this.emptySubItemDropPlaceholder,
     required this.itemHoverDecorationBuilder,
+    required this.categoryHoverDecorationBuilder,
     this.onCategoryReorder,
     this.onItemMove,
     this.onSubItemMove,
@@ -252,6 +254,9 @@ class NestedDragDropBoard<TCategory, TItem, TSubItem> extends StatefulWidget {
   /// Funkcja zwracająca dekorację dla elementu podczas hover (gdy przeciągany element jest nad nim)
   final BoxDecoration? Function(bool isHovering) itemHoverDecorationBuilder;
 
+  /// Funkcja zwracająca dekorację dla kategorii podczas hover (gdy przeciągana kategoria jest nad nią)
+  final BoxDecoration? Function(bool isHovering) categoryHoverDecorationBuilder;
+
   @override
   State<NestedDragDropBoard<TCategory, TItem, TSubItem>> createState() =>
       _NestedDragDropBoardState<TCategory, TItem, TSubItem>();
@@ -297,12 +302,9 @@ class _NestedDragDropBoardState<TCategory, TItem, TSubItem>
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
-                  decoration: isHovering
-                      ? BoxDecoration(
-                          border: Border.all(color: Colors.purple, width: 3),
-                          borderRadius: BorderRadius.circular(8),
-                        )
-                      : null,
+                  decoration: widget.categoryHoverDecorationBuilder.call(
+                    isHovering,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -373,6 +375,8 @@ class _NestedDragDropBoardState<TCategory, TItem, TSubItem>
                               widget.categoryContainerBuilder,
                           itemHoverDecorationBuilder:
                               widget.itemHoverDecorationBuilder,
+                          categoryHoverDecorationBuilder:
+                              widget.categoryHoverDecorationBuilder,
                           onItemMove: widget.onItemMove,
                           onSubItemMove: widget.onSubItemMove,
                           onItemToSubItem: widget.onItemToSubItem,
@@ -443,6 +447,7 @@ class _CategorySection<TCategory, TItem, TSubItem> extends StatelessWidget {
     required this.emptySubItemDropPlaceholder,
     this.categoryContainerBuilder,
     this.itemHoverDecorationBuilder,
+    this.categoryHoverDecorationBuilder,
     super.key,
   });
 
@@ -496,6 +501,8 @@ class _CategorySection<TCategory, TItem, TSubItem> extends StatelessWidget {
   final Widget Function(Widget child, TCategory category, bool isHovering)?
   categoryContainerBuilder;
   final BoxDecoration? Function(bool isHovering)? itemHoverDecorationBuilder;
+  final BoxDecoration? Function(bool isHovering)?
+  categoryHoverDecorationBuilder;
 
   @override
   Widget build(BuildContext context) {
